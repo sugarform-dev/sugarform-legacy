@@ -5,5 +5,21 @@
   "repository": "https://github.com/sugarform-dev/sugarform.git",
   "author": "aspulse <aspulse.x@gmail.com>",
   "license": "MIT",
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.9.5"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "@types/react": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  }
 }
