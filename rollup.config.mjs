@@ -25,6 +25,7 @@ export default [
       }),
       swc(defineRollupSwcOption({
         exclude: /__tests__/,
+        sourceMaps: false,
       })),
       minify(defineRollupSwcMinifyOption({
         compress: true,
