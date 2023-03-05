@@ -56,6 +56,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/deepmerge@npm:^1.1.0":
+  version: 1.3.0
+  resolution: "@fastify/deepmerge@npm:1.3.0"
+  checksum: 33ec927905dca320d7ae9535a1521909f7c82339706345324ab6287ad100589a799b8257c15b0e582c7bb74e2aa4883d82ba0228d7b116aa8789ada4f78d6974
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -180,6 +187,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/pluginutils@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@rollup/pluginutils@npm:4.2.1"
+  dependencies:
+    estree-walker: ^2.0.1
+    picomatch: ^2.2.2
+  checksum: 6bc41f22b1a0f1efec3043899e4d3b6b1497b3dea4d94292d8f83b4cf07a1073ecbaedd562a22d11913ff7659f459677b01b09e9598a98936e746780ecc93a12
+  languageName: node
+  linkType: hard
+
 "@rollup/pluginutils@npm:^5.0.1":
   version: 5.0.2
   resolution: "@rollup/pluginutils@npm:5.0.2"
@@ -193,6 +210,115 @@ __metadata:
     rollup:
       optional: true
   checksum: edea15e543bebc7dcac3b0ac8bc7b8e8e6dbd46e2864dbe5dd28072de1fbd5b0e10d545a610c0edaa178e8a7ac432e2a2a52e547ece1308471412caba47db8ce
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-arm64@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-darwin-arm64@npm:1.3.37"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-darwin-x64@npm:1.3.37"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.37"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.37"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-musl@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-linux-arm64-musl@npm:1.3.37"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-linux-x64-gnu@npm:1.3.37"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-linux-x64-musl@npm:1.3.37"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.37"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.37"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core-win32-x64-msvc@npm:1.3.37"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:^1.3.37":
+  version: 1.3.37
+  resolution: "@swc/core@npm:1.3.37"
+  dependencies:
+    "@swc/core-darwin-arm64": 1.3.37
+    "@swc/core-darwin-x64": 1.3.37
+    "@swc/core-linux-arm-gnueabihf": 1.3.37
+    "@swc/core-linux-arm64-gnu": 1.3.37
+    "@swc/core-linux-arm64-musl": 1.3.37
+    "@swc/core-linux-x64-gnu": 1.3.37
+    "@swc/core-linux-x64-musl": 1.3.37
+    "@swc/core-win32-arm64-msvc": 1.3.37
+    "@swc/core-win32-ia32-msvc": 1.3.37
+    "@swc/core-win32-x64-msvc": 1.3.37
+  dependenciesMeta:
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  checksum: 1cfa1ce8967a1d04361af076023bb50cc90bb413c347b0d7c7e86cf9b8277d05471dd2a24708a77365e527c51ddde3cd752fe49975b9e236c3abf9590e3106dd
   languageName: node
   linkType: hard
 
@@ -1178,7 +1304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"estree-walker@npm:^2.0.2":
+"estree-walker@npm:^2.0.1, estree-walker@npm:^2.0.2":
   version: 2.0.2
   resolution: "estree-walker@npm:2.0.2"
   checksum: 6151e6f9828abe2259e57f5fd3761335bb0d2ebd76dc1a01048ccee22fabcfef3c0859300f6d83ff0d1927849368775ec5a6d265dde2f6de5a1be1721cd94efc
@@ -1384,6 +1510,13 @@ __metadata:
     call-bind: ^1.0.2
     get-intrinsic: ^1.1.1
   checksum: 9ceff8fe968f9270a37a1f73bf3f1f7bda69ca80f4f80850670e0e7b9444ff99323f7ac52f96567f8b5f5fbe7ac717a0d81d3407c7313e82810c6199446a5247
+  languageName: node
+  linkType: hard
+
+"get-tsconfig@npm:^4.2.0":
+  version: 4.4.0
+  resolution: "get-tsconfig@npm:4.4.0"
+  checksum: e193558b4f0c84c81ae9688cf5b9950dc0b341e44f91b002713fd0c37cfb73108e1cd9998ed540bcc423f193fde32cc58a15e99dd469f5158a2eb4a148611176
   languageName: node
   linkType: hard
 
@@ -2396,7 +2529,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picomatch@npm:^2.3.1":
+"picomatch@npm:^2.2.2, picomatch@npm:^2.3.1":
   version: 2.3.1
   resolution: "picomatch@npm:2.3.1"
   checksum: 050c865ce81119c4822c45d3c84f1ced46f93a0126febae20737bd05ca20589c564d6e9226977df859ed5e03dc73f02584a2b0faad36e896936238238b0446cf
@@ -2606,6 +2739,20 @@ __metadata:
     "@babel/code-frame":
       optional: true
   checksum: cb4a1ff5307efb9a89edd72b5bd1760d8dd3df7b7c5ea61615755669619ec1441e916fe1452068bc17dbae17efbd4cfe6f55478690eb809800f0ffdb76a52fc9
+  languageName: node
+  linkType: hard
+
+"rollup-plugin-swc3@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "rollup-plugin-swc3@npm:0.8.0"
+  dependencies:
+    "@fastify/deepmerge": ^1.1.0
+    "@rollup/pluginutils": ^4.2.1
+    get-tsconfig: ^4.2.0
+  peerDependencies:
+    "@swc/core": ">=1.2.165"
+    rollup: ^2.0.0 || ^3.0.0
+  checksum: 381b3a6b80f9fd416ae60aca3f2e48dbb125983f5da241e9b35373e29ff4f16de8ce2f7754a3ecd39f2fcc6ae2ac5bcdc12646b0f23d00ec9babacc9fc04a5cc
   languageName: node
   linkType: hard
 
@@ -2858,6 +3005,7 @@ __metadata:
   dependencies:
     "@rollup/plugin-commonjs": ^24.0.1
     "@rollup/plugin-typescript": ^11.0.0
+    "@swc/core": ^1.3.37
     "@types/react": ^18.0.28
     "@typescript-eslint/eslint-plugin": ^5.54.0
     "@typescript-eslint/parser": ^5.54.0
@@ -2869,6 +3017,7 @@ __metadata:
     react-dom: ^18.2.0
     rollup: ^3.18.0
     rollup-plugin-dts: ^5.2.0
+    rollup-plugin-swc3: ^0.8.0
     tslib: ^2.5.0
     typescript: ^4.9.5
   peerDependencies:
