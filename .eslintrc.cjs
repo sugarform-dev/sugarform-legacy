@@ -7,12 +7,13 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:jest/recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@typescript-eslint/strict',
   ],
-  overrides: [],
+  ignorePatterns: [ 'dist/**/*' ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -21,6 +22,7 @@ module.exports = {
   },
   plugins: [
     'react',
+    'jest',
     '@typescript-eslint',
     'import',
     'unused-imports',
@@ -43,9 +45,12 @@ module.exports = {
     'camelcase': [ 'error' ],
     'object-curly-spacing': [ 'error', 'always' ],
     'array-bracket-spacing': [ 'error', 'always', { arraysInArrays: false, objectsInArrays: false }],
+    'block-spacing': [ 'error', 'always' ],
+    'space-infix-ops': [ 'error' ],
     'space-before-blocks': [ 'error', 'always' ],
     'spaced-comment': [ 'error', 'always' ],
     'brace-style': [ 'error', '1tbs', { allowSingleLine: true }],
+    'keyword-spacing': [ 'error', { before: true, after: true }],
     'arrow-spacing': [ 'error', { before: true, after: true }],
     'func-call-spacing': [ 'error', 'never' ],
     'function-call-argument-newline': [ 'error', 'consistent' ],
@@ -60,6 +65,28 @@ module.exports = {
 
     // RegExp#exec may also be slightly faster than String#match.
     '@typescript-eslint/prefer-regexp-exec': [ 'error' ],
+
+    /* Jest */
+    'jest/consistent-test-it': [ 'error', { fn: 'it' }],
+    'jest/prefer-expect-resolves': [ 'error' ],
+    'jest/prefer-spy-on': [ 'error' ],
+    'jest/prefer-to-be': [ 'error' ],
+    'jest/prefer-strict-equal': [ 'error' ],
+    'jest/prefer-todo': [ 'error' ],
+
+    'no-restricted-globals': [
+      'error',
+      ...[
+        'it', 'test',
+        'fix', 'xit', 'xtest',
+        'describe', 'xdescribe', 'fdescribe',
+        'beforeAll', 'beforeEach', 'afterEach', 'afterAll',
+      ].map(name => ({
+        name,
+        message: 'Please import from @jest/globals instead.',
+      })),
+    ],
+
 
     /* import and export */
     'no-restricted-exports': [ 'error', { restrictDefaultExports: { direct: true, defaultFrom: true, namedFrom: true } }],
