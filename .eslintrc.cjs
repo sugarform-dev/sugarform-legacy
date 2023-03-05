@@ -56,7 +56,7 @@ module.exports = {
     'function-call-argument-newline': [ 'error', 'consistent' ],
     'dot-location': [ 'error', 'property' ],
     'dot-notation': [ 'error' ],
-    '@typescript-eslint/array-type': [ 'error', 'array-simple' ],
+    '@typescript-eslint/array-type': [ 'error', { default: 'array-simple', readonly: 'array-simple' }],
     '@typescript-eslint/prefer-for-of': [ 'error' ],
     '@typescript-eslint/prefer-includes': [ 'error' ],
 
@@ -100,10 +100,10 @@ module.exports = {
     'unused-imports/no-unused-imports': [ 'error' ],
 
     /* Maintainability */
-    'complexity': [ 'warn', 6 ],
+    'complexity': [ 'warn', 10 ],
     'max-classes-per-file': [ 'warn', 1 ],
     'max-depth': [ 'warn', 3 ],
-    'max-len': [ 'warn', { code: 50, ignoreComments: true, ignoreStrings: true, ignoreTemplateLiterals: true }],
+    'max-len': [ 'warn', { code: 100, ignoreComments: true, ignoreStrings: true, ignoreTemplateLiterals: true }],
     'max-lines-per-function': [ 'warn', 50 ],
     'no-multi-str': [ 'warn' ],
     'object-shorthand': [ 'warn' ],
@@ -123,7 +123,6 @@ module.exports = {
     'no-self-compare': [ 'error' ],
     'no-unmodified-loop-condition': [ 'error' ],
     'no-unused-private-class-members': [ 'error' ],
-    'no-use-before-define': [ 'error' ],
     'no-param-reassign': [ 'error' ],
     'no-return-assign': [ 'error' ],
     'no-return-await': [ 'error' ],

@@ -27,6 +27,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", "tests", ".eslintrc.cjs", "rollup.config.mjs", "jest.config.cjs"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "tests", "misc", ".eslintrc.cjs", "rollup.config.mjs", "jest.config.cjs"],
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }
