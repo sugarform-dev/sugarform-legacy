@@ -2,10 +2,12 @@ name: bundle-size
 on: [pull_request]
 
 jobs:
-  build-head:
+  build_head:
     runs-on: [ubuntu-latest]
     permissions:
       contents: read
+    outputs:
+      result: ${{ steps.export.outputs.HEAD_RESULT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -19,13 +21,16 @@ jobs:
       - name: Build
         run: yarn build
       - name: Export Size Info
+        id: export
         run: |
-          echo "HEAD_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_ENV
+          echo "HEAD_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_OUTPUT
 
-  build-base:
+  build_base:
     runs-on: [ubuntu-latest]
     permissions:
       contents: read
+    outputs:
+      result: ${{ steps.export.outputs.BASE_RESULT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,12 +46,13 @@ jobs:
       - name: Build
         run: yarn build
       - name: Export Size Info
+        id: export
         run: |
-          echo "BASE_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_ENV
+          echo "BASE_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_OUTPUT
 
   compare:
     runs-on: [ubuntu-latest]
-    needs: [build-base, build-head]
+    needs: [build_base, build_head]
     permissions:
       contents: read
       pull-requests: write
@@ -63,7 +69,10 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
       - name: Export Markdown
-        run: yarn ts-node ./misc/bundle-size-diff.ts diff ${{ env.HEAD_RESULT }} ${{ env.BASE_RESULT }}
+        env:
+          HEAD_RESULT: ${{ needs.build_head.outputs.result }}
+          BASE_RESULT: ${{ needs.build_base.outputs.result }}
+        run: yarn ts-node ./misc/bundle-size-diff.ts diff $HEAD_RESULT $BASE_RESULT
       - name: Post Review Comment
         uses: NejcZdovc/comment-pr@v1.1.1
         with:
