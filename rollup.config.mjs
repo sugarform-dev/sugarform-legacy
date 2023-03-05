@@ -35,12 +35,12 @@ export default [
     external: [ 'react', 'react-dom' ],
   },
   {
-    input: 'dist/cjs/types/index.d.ts',
+    input: 'src/index.ts',
     output: [{ file: 'dist/cjs/index.d.ts', format: 'cjs' }],
     plugins: [ dts() ],
   },
   {
-    input: 'dist/esm/types/index.d.ts',
+    input: 'src/index.ts',
     output: [{ file: 'dist/esm/index.d.ts', format: 'esm' }],
     plugins: [ dts() ],
   },
