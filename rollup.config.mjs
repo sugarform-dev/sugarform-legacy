@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-exports */
 import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
-import { swc, defineRollupSwcOption } from 'rollup-plugin-swc3';
+import { swc, defineRollupSwcOption, minify, defineRollupSwcMinifyOption } from 'rollup-plugin-swc3';
 import packageJson from './package.json' assert { type: 'json' };
 
 export default [
@@ -25,6 +25,10 @@ export default [
       }),
       swc(defineRollupSwcOption({
         exclude: /__tests__/,
+      })),
+      minify(defineRollupSwcMinifyOption({
+        compress: true,
+        mangle: true,
       })),
     ],
     external: [ 'react', 'react-dom' ],
