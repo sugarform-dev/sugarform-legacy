@@ -1,6 +1,6 @@
 {
-  "name": "sugarform",
-  "version": "0.0.0",
+  "name": "@sugarform/core",
+  "version": "1.0.0-alpha.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [
@@ -43,5 +43,8 @@
   },
   "scripts": {
     "build": "rollup -c"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
