@@ -3,7 +3,6 @@ on: [pull_request]
 
 jobs:
   build-head:
-    name: 'Build and calculate size of HEAD branch'
     runs-on: [ubuntu-latest]
     permissions:
       contents: read
@@ -24,7 +23,6 @@ jobs:
           echo "HEAD_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_ENV
 
   build-base:
-    name: 'Build and calculate size of BASE branch'
     runs-on: [ubuntu-latest]
     permissions:
       contents: read
@@ -47,7 +45,6 @@ jobs:
           echo "BASE_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_ENV
 
   compare:
-    name: 'Compare base and head bundle sizes'
     runs-on: [ubuntu-latest]
     needs: [build-base, build-head]
     permissions:
