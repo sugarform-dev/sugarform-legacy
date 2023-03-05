@@ -12,9 +12,12 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn install --immutable
       - name: eslint
         uses: reviewdog/action-eslint@v1
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
-          eslint_flags: '.'
+          filter_mode: diff_context,
+          fail_on_error: true
