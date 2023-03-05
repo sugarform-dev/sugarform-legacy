@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2015",
     "module": "ESNext",
     "outDir": "dist",
     "rootDir": "./src",
@@ -27,6 +27,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", ".eslintrc.cjs"],
+  "include": ["src", ".eslintrc.cjs", "rollup.config.mjs"],
   "exclude": ["node_modules", "dist"]
 }
