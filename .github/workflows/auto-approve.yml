@@ -1,11 +1,11 @@
 name: auto-approve
-on: [pull_request_target]
+on: [pull_request]
 
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    if: github.actor == 'AsPulse'
+    if: github.event.pull_request.user.login == 'AsPulse'
     steps:
       - uses: hmarr/auto-approve-action@v3
