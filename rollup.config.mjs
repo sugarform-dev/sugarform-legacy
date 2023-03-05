@@ -24,7 +24,7 @@ export default [
         include: [ 'node_modules/**' ],
       }),
       swc(defineRollupSwcOption({
-        exclude: /__tests__/,
+        exclude: /tests/,
         sourceMaps: false,
       })),
       minify(defineRollupSwcMinifyOption({
