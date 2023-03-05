@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { readFile, writeFile } from 'fs/promises';
+import { rm, mkdir, readFile, writeFile } from 'fs/promises';
 
 interface Diff {
   head: number;
@@ -66,8 +66,10 @@ async function exportToMarkdown(data: DiffResult): Promise<void> {
       '',
     ].join('|'),
   ].join('\n');
-  await writeFile('./.github/workflows/bundle-size.md', result);
-  console.log('Result is exported to: .github/workflows/bundle-size.md');
+  await rm('./bundle-size', { recursive: true, force: true });
+  await mkdir('./bundle-size', { recursive: true  });
+  await writeFile('./bundle-size/result.md', result);
+  console.log('Result is exported to: bundle-size/result.md');
   return;
 }
 

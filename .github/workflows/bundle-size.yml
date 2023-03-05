@@ -74,6 +74,6 @@ jobs:
           BASE_RESULT: ${{ needs.build_base.outputs.result }}
         run: yarn ts-node ./misc/bundle-size-diff.ts diff $HEAD_RESULT $BASE_RESULT
       - name: Post Review Comment
-        uses: NejcZdovc/comment-pr@v1.1.1
+        uses: mshick/add-pr-comment@v2
         with:
-          file: 'bundle-size.md'
+          message-path: 'bundle-size/result.md'
