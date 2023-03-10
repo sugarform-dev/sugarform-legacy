@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { rm, mkdir, readFile, writeFile } from 'fs/promises';
+import { readFile } from 'fs/promises';
 
 interface Diff {
   head: number;
@@ -39,7 +39,7 @@ function getDiff(args: string[]): DiffResult {
 
 }
 
-async function exportToMarkdown(data: DiffResult): Promise<void> {
+function exportToMarkdown(data: DiffResult): void {
   const result = [
     '## Bundle Size Summary',
     '||Base branch|HEAD branch|Diff|',
@@ -66,10 +66,7 @@ async function exportToMarkdown(data: DiffResult): Promise<void> {
       '',
     ].join('|'),
   ].join('\n');
-  await rm('./bundle-size', { recursive: true, force: true });
-  await mkdir('./bundle-size', { recursive: true  });
-  await writeFile('./bundle-size/result.md', result);
-  console.log('Result is exported to: bundle-size/result.md');
+  console.log(result);
   return;
 }
 
@@ -106,7 +103,7 @@ async function main(): Promise<void> {
     break;
 
   case 'diff':
-    await exportToMarkdown( getDiff(args) );
+    exportToMarkdown(getDiff(args));
     break;
 
   default:
