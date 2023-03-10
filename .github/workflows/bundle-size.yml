@@ -70,13 +70,15 @@ jobs:
         run: yarn install --immutable
       - name: Calculation
         id: calc
+        uses: gh640/command-result-action@v1
         env:
           HEAD_RESULT: ${{ needs.build_head.outputs.result }}
           BASE_RESULT: ${{ needs.build_base.outputs.result }}
-        run: echo "payload=$(yarn ts-node ./misc/bundle-size-diff.ts diff $HEAD_RESULT $BASE_RESULT)" >> "$GITHUB_OUTPUT"
+        with:
+          command: yarn ts-node ./misc/bundle-size-diff.ts diff $HEAD_RESULT $BASE_RESULT
       - name: Post Review Comment
         uses: sammcj/rewritable-pr-comment@main
         with:
-          message: ${{ steps.id.output.payload }}
+          message: ${{ steps.calc.outputs.stdout }}
           github_token: ${{ secrets.ACTION_TOKEN }}
           comment_identifier: 'bundle-size'
