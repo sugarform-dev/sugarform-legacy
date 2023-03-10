@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.base_re }}
+          ref: ${{ github.base_ref }}
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -68,12 +68,16 @@ jobs:
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn install --immutable
-      - name: Export Markdown
+      - name: Calculation
+        id: calc
+        uses: gh640/command-result-action@v1
         env:
           HEAD_RESULT: ${{ needs.build_head.outputs.result }}
           BASE_RESULT: ${{ needs.build_base.outputs.result }}
-        run: yarn ts-node ./misc/bundle-size-diff.ts diff $HEAD_RESULT $BASE_RESULT
-      - name: Post Review Comment
-        uses: mshick/add-pr-comment@v2
         with:
-          message-path: 'bundle-size/result.md'
+          command: yarn ts-node ./misc/bundle-size-diff.ts diff
+      - name: Post Review Comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: ${{ steps.calc.outputs.stdout }}
+          comment_tag: 'bundle-size-diff'
