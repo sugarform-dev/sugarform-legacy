@@ -13,11 +13,11 @@ interface DiffResult {
   package: Diff;
 }
 
-function getDiff(args: string[]): DiffResult {
+function getDiff(): DiffResult {
 
-  const size = { head: args[3], base: args[4] };
+  const size = { head: process.env.HEAD_RESULT, base: process.env.BASE_RESULT };
   if (size.head === undefined || size.base === undefined) {
-    console.error('Usage: bundle-size-diff diff <head> <base>');
+    console.error('Put $HEAD_RESULT and $BASE_RESULT');
     process.exit(1);
   }
 
@@ -103,7 +103,7 @@ async function main(): Promise<void> {
     break;
 
   case 'diff':
-    exportToMarkdown(getDiff(args));
+    exportToMarkdown(getDiff());
     break;
 
   default:

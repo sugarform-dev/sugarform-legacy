@@ -75,10 +75,10 @@ jobs:
           HEAD_RESULT: ${{ needs.build_head.outputs.result }}
           BASE_RESULT: ${{ needs.build_base.outputs.result }}
         with:
-          command: yarn ts-node ./misc/bundle-size-diff.ts diff $HEAD_RESULT $BASE_RESULT
+          command: yarn ts-node ./misc/bundle-size-diff.ts diff
       - name: Post Review Comment
         uses: sammcj/rewritable-pr-comment@main
         with:
           message: ${{ steps.calc.outputs.stdout }}
-          github_token: ${{ secrets.ACTION_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           comment_identifier: 'bundle-size'
