@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.base_re }}
+          ref: ${{ github.base_ref }}
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -81,4 +81,3 @@ jobs:
         with:
           message: ${{ steps.calc.outputs.stdout }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          comment_identifier: 'bundle-size'
