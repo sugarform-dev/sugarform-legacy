@@ -66,13 +66,8 @@ export function mountSugar<T, U extends SugarObject>(
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
     const fields = fieldsRef.current;
     if (!sugar.mounted || fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    if (isDirty) {
-      if (sugar.isDirty) return;
-      setDirty(sugar, true);
-    } else {
-      if (Object.values(fields).some(s => s.mounted && s.isDirty)) return;
-      setDirty(sugar, false);
-    }
+    if (!isDirty && Object.values(fields).some(s => s.mounted && s.isDirty)) return;
+    setDirty(sugar, isDirty);
   };
 
   Object.values(fields).forEach(sugar => sugar.upstream.listen('updateDirty', dirtyControl));
@@ -82,6 +77,7 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.get = getter;
   updateSugar.set = setter;
   updateSugar.isDirty = false;
+  updateSugar.upstream.fire('mounted', {});
 
   return { fields };
 }
