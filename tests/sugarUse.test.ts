@@ -72,14 +72,14 @@ describe('useObject', () => {
     expect(fields).toStrictEqual(expected);
   });
 
-  it('should get/set work', () => {
+  it('should get/set/isDirty work', () => {
     const original = {
       a: { b: 'foo', c: 'bar' },
     };
     const wrapped = wrapSugar('foo', original);
     const { result: { current: { fields } } } = renderHook(() => wrapped.a.useObject({}));
 
-    const setterOfB = jest.fn();
+    const setterOfB = jest.fn(data => fields.b.upstream.fire('updateDirty', { isDirty: data !== 'foo' }));
     fields.b = {
       ...fields.b,
       mounted: true,
@@ -98,10 +98,16 @@ describe('useObject', () => {
     };
 
     expect(wrapped.a.mounted).toBe(true);
+    expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
     expect(wrapped.a.mounted && wrapped.a.get()).toStrictEqual({ success: true, value: { b: 'foo', c: 'bar' } });
+    expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
     wrapped.a.mounted && wrapped.a.set({ b: 'baz', c: 'qux' });
+    expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(true);
     expect(setterOfB).toHaveBeenCalledWith('baz');
     expect(setterOfC).toHaveBeenCalledWith('qux');
+    wrapped.a.mounted && wrapped.a.set({ b: 'foo', c: 'bar' });
+    expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
 
   });
+
 });

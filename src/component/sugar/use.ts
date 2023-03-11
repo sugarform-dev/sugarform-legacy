@@ -3,8 +3,11 @@ import { useRef } from 'react';
 import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue } from '.';
 import { SugarFormError } from '../../util/error';
 import { debug } from '../../util/logger';
-import type { SugarObject } from '../../util/object';
+import type { BetterObjectConstructor, SugarObject } from '../../util/object';
 import { createEmptySugar } from './create';
+import { setDirty } from './dirty';
+
+declare const Object: BetterObjectConstructor;
 
 export function useSugar<T, U extends SugarObject>(
   sugar: Sugar<T>,
@@ -40,11 +43,11 @@ export function mountSugar<T, U extends SugarObject>(
   const template = options.reshape.deform(sugar.template);
   debug('DEBUG', `Template: ${JSON.stringify(template)}`);
 
+  const fields = wrapSugar(sugar.path, template);
+
   const getter = (): SugarValue<T> => {
     const fields = fieldsRef.current;
-    if (fields === undefined) {
-      throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    }
+    if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
     debug('DEBUG', `Getting value of sugar. Path: ${sugar.path}`);
     const value = get<U>(fields);
     debug('DEBUG', `Value: ${JSON.stringify(value)}, Path: ${sugar.path}`);
@@ -60,12 +63,24 @@ export function mountSugar<T, U extends SugarObject>(
   const setter = (value: T): void => {
     debug('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
     const fields = fieldsRef.current;
-    if (fields === undefined) {
-      throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    }
+    if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
     const sugarValue = options.reshape.deform(value);
     set<U>(fields, sugarValue);
   };
+
+  const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
+    const fields = fieldsRef.current;
+    if (!sugar.mounted || fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
+    if (isDirty) {
+      if (sugar.isDirty) return;
+      setDirty(sugar, true);
+    } else {
+      if (Object.values(fields).some(s => s.mounted && s.isDirty)) return;
+      setDirty(sugar, false);
+    }
+  };
+
+  Object.values(fields).forEach(sugar => sugar.upstream.listen('updateDirty', dirtyControl));
 
   const updateSugar = sugar as Sugar<T> & { mounted: true };
   updateSugar.mounted = true;
@@ -74,7 +89,7 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.isDirty = false;
 
   return {
-    fields: wrapSugar(sugar.path, template),
+    fields,
   };
 }
 
@@ -123,4 +138,8 @@ export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'],
       sugar.set(value[key]);
     }
   }
+}
+
+export function updateDirty<T extends SugarObject>(fields: SugarObjectNode<T>['fields']): void {
+
 }
