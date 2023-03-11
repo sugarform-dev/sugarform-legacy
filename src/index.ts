@@ -1,4 +1,2 @@
-export function helloSugarForm(): void {
-  console.log('Hello, Sugar Form!');
-  return;
-}
+export type { Sugar } from './component/sugar';
+export { setSugarFormLogLevel } from './util/logger';
