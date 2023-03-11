@@ -9,6 +9,11 @@ const SugarFormErrorMap = [
     name: 'DifferentFromTypeDefinition',
     message: 'Incorrect type detected.\nIt is believed that the code does not follow TypeScript type annotations.',
   },
+  {
+    code: 'SF0010',
+    name: 'Not Implemented',
+    message: 'This feature is not implemented yet.',
+  },
 ] as const;
 
 export class SugarFormError extends Error {
