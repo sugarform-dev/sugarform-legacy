@@ -48,15 +48,11 @@ export function mountSugar<T, U extends SugarObject>(
   const getter = (): SugarValue<T> => {
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    debug('DEBUG', `Getting value of sugar. Path: ${sugar.path}`);
     const value = get<U>(fields);
-    debug('DEBUG', `Value: ${JSON.stringify(value)}, Path: ${sugar.path}`);
-    return value.success ? {
+    debug('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}, Path: ${sugar.path}`);
+    return !value.success ? value : {
       success: true,
       value: options.reshape.transform(value.value),
-    } : {
-      success: false,
-      value: value.value,
     };
   };
 
@@ -64,8 +60,7 @@ export function mountSugar<T, U extends SugarObject>(
     debug('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    const sugarValue = options.reshape.deform(value);
-    set<U>(fields, sugarValue);
+    set<U>(fields, options.reshape.deform(value));
   };
 
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
@@ -88,10 +83,9 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.set = setter;
   updateSugar.isDirty = false;
 
-  return {
-    fields,
-  };
+  return { fields };
 }
+
 
 export function wrapSugar<T extends SugarObject>(path: string, template: T): SugarObjectNode<T>['fields'] {
   const fields: SugarObjectNode<T>['fields'] = {} as SugarObjectNode<T>['fields'];
@@ -138,8 +132,4 @@ export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'],
       sugar.set(value[key]);
     }
   }
-}
-
-export function updateDirty<T extends SugarObject>(fields: SugarObjectNode<T>['fields']): void {
-
 }
