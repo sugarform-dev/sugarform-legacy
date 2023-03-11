@@ -10,9 +10,14 @@ const SugarFormErrorMap = [
     message: 'Incorrect type detected.\nIt is believed that the code does not follow TypeScript type annotations.',
   },
   {
-    code: 'SF0010',
+    code: 'SF0011',
     name: 'Not Implemented',
     message: 'This feature is not implemented yet.',
+  },
+  {
+    code: 'SF0021',
+    name: 'RequestValueToUnmoutedSugar',
+    message: 'Sugar was forced unmounted from outside.',
   },
 ] as const;
 

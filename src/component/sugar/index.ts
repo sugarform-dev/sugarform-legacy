@@ -9,7 +9,7 @@ export type Sugar<T> = SugarData<T> & ({
   mounted: true,
   get: () => SugarValue<T>,
   set: (value: T) => void,
-  isDirty: boolean
+  isDirty: boolean,
 });
 
 export type SugarData<T> = {
@@ -17,11 +17,14 @@ export type SugarData<T> = {
   template: T,
   upstream: SugarUpstreamEventEmitter,
   downstream: SugarDownstreamEventEmitter,
-  use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
 } & (
   T extends SugarObject ?
-    { useObject: (options: SugarUser) => SugarObjectNode< T> } :
-    Record<string, never>
+    {
+      use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
+      useObject: (options: SugarUser) => SugarObjectNode<T>
+    } : {
+      use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
+    }
 );
 // ) & (
 //   T extends Array<infer U> ?
@@ -29,12 +32,13 @@ export type SugarData<T> = {
 //     Record<string, never>
 // );
 
-export interface SugarValue<T> {
+export type SugarValue<T> = {
+  success: true,
   value: T,
-  validation: {
-    success: boolean
-  }
-}
+} | {
+  success: false,
+  value: unknown,
+};
 
 export interface SugarUser {
 

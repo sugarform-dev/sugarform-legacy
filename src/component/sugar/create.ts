@@ -17,10 +17,10 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
   };
 
   if (isSugarObject(template)) {
-    sugar.useObject =
-      (options: SugarUser): SugarObjectNode<T & SugarObject> =>
-        useSugar<T & SugarObject, T & SugarObject>(
-          sugar as Sugar<T & SugarObject>,
+    (sugar as Sugar<SugarObject>).useObject =
+      (options: SugarUser): SugarObjectNode<SugarObject> =>
+        useSugar<SugarObject, SugarObject>(
+          sugar as Sugar<SugarObject>,
           {
             ...options,
             reshape: {
