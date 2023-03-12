@@ -18,7 +18,7 @@ export function useSugar<T, U extends SugarObject>(
   let fields = fieldsRef.current;
 
   if (sugar.mounted && fields === undefined) {
-    debug('WARN', 'Sugar is already mounted, but fields are not initialized. Remounting... Path: ${sugar.path}');
+    debug('WARN', `Sugar is already mounted, but fields are not initialized. Remounting... Path: ${sugar.path}`);
   }
 
   if (sugar.mounted && fields !== undefined) {
