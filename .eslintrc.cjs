@@ -13,7 +13,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@typescript-eslint/strict',
   ],
-  ignorePatterns: [ 'dist/**/*' ],
+  ignorePatterns: [ 'dist/**/*', 'coverage/**/*' ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
