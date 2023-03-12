@@ -1,6 +1,6 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
-import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue } from '.';
+import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '.';
 import { SugarFormError } from '../../util/error';
 import { debug } from '../../util/logger';
 import type { BetterObjectConstructor, SugarObject } from '../../util/object';
@@ -73,7 +73,7 @@ export function mountSugar<T, U extends SugarObject>(
     debug('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    set<U>(fields, options.reshape.deform(value), 'value');
+    set<U>(fields, options.reshape.deform(value), { type: 'value' });
   };
 
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
@@ -89,10 +89,13 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.mounted = true;
   updateSugar.get = getter;
   updateSugar.set = setter;
-  updateSugar.setTemplate = (template: T): void => {
-    sugar.template = template;
-    const newTemplate = options.reshape.deform(template);
-    set<U>(fields, newTemplate, 'template');
+  updateSugar.setTemplate = (template: T, mode: SetTemplateMode = 'merge'): void => {
+    sugar.template = mode === 'replace' ? template : {
+      ...sugar.template,
+      ...template,
+    };
+    const newTemplate = options.reshape.deform(sugar.template);
+    set<U>(fields, newTemplate, { type: 'template', mode });
   };
   updateSugar.isDirty = false;
   updateSugar.upstream.fire('mounted', {});
@@ -137,17 +140,26 @@ export function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields'])
   };
 }
 
-export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'], value: T, type: 'value' | 'template'): void {
+export function set<T extends SugarObject>(
+  fields: SugarObjectNode<T>['fields'],
+  value: T,
+  type: {
+    type: 'value'
+  } | {
+    type: 'template',
+    mode: SetTemplateMode
+  },
+): void {
   for (const key in fields) {
     const sugar = fields[key];
     if (!sugar.mounted) {
       debug('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
       continue;
     }
-    if (type === 'value') {
+    if (type.type === 'value') {
       sugar.set(value[key]);
     } else {
-      sugar.setTemplate(value[key]);
+      sugar.setTemplate(value[key], type.mode);
     }
   }
 }

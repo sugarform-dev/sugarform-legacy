@@ -8,7 +8,6 @@ import { createEmptySugar } from '../src/component/sugar/create';
 import { SugarFormError } from '../src/util/error';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 describe('createEmptySugar', () => {
   it('error call useObject from non-SugarObject sugar', () => {
     const sugar = createEmptySugar('foo', 3);
