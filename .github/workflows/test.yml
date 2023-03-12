@@ -1,5 +1,9 @@
 name: test
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+    - main
 
 jobs:
   jest:
@@ -29,4 +33,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
       - name: Run Jest
-        run: yarn test
+        run: yarn test --verbose --coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
