@@ -131,13 +131,13 @@ describe('useObject', () => {
     const { result: { current: { fields } } } = renderHook(() => wrapped.a.useObject({}));
 
     const setterOfB = jest.fn(data => fields.b.upstream.fire('updateDirty', { isDirty: data !== 'foo' }));
+    const setterOfC = jest.fn();
     renderHook(() => {
       fields.b.useFromRef({
         get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
         set: setterOfB,
       });
 
-      const setterOfC = jest.fn();
       fields.c.useFromRef({
         get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
         set: setterOfC,
