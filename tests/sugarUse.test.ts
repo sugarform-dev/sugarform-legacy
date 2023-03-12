@@ -88,7 +88,7 @@ describe('useObject', () => {
     }>('foo', original);
     const { result: { current: { fields } } } = renderHook(() => wrapped.a.useObject({
       validation: [
-        { condition: x => x.c !== 'qux' },
+        { condition: (x): boolean => x.c !== 'qux' },
       ],
     }));
 
