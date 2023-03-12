@@ -152,10 +152,14 @@ describe('useObject', () => {
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
     expect(wrapped.a.mounted && wrapped.a.get()).toStrictEqual({ success: true, value: { b: 'foo', c: 'bar' } });
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
+    expect(setterOfB).toHaveBeenCalledWith('foo');
+    expect(setterOfC).toHaveBeenCalledWith('bar');
     wrapped.a.mounted && wrapped.a.set({ b: 'baz', c: 'qux' });
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(true);
-    expect(setterOfB).toHaveBeenCalledWith('baz');
-    expect(setterOfC).toHaveBeenCalledWith('qux');
+    expect(setterOfB).toHaveBeenLastCalledWith('baz');
+    expect(setterOfC).toHaveBeenLastCalledWith('qux');
+    expect(setterOfB).toHaveBeenCalledTimes(2);
+    expect(setterOfC).toHaveBeenCalledTimes(2);
     wrapped.a.mounted && wrapped.a.set({ b: 'foo', c: 'bar' });
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
 
