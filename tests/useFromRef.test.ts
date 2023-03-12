@@ -1,8 +1,21 @@
 import { describe, it } from '@jest/globals';
 import { renderHook } from '@testing-library/react';
-import type { SugarValue } from '../src/component/sugar';
+import type { Sugar, SugarValue } from '../src/component/sugar';
 import { createEmptySugar } from '../src/component/sugar/create';
 
+
+const safeSet = <T,>(a: Sugar<T>, value: T): void => {
+  if (a.mounted) {
+    a.get = (): SugarValue<T> => ({ success: true, value });
+    a.set(value);
+  }
+};
+
+const safeEdit = <T,>(a: Sugar<T>, value: T): void => {
+  if (a.mounted) {
+    a.get = (): SugarValue<T> => ({ success: true, value });
+  }
+};
 
 describe('useFromRef', () => {
 
@@ -20,16 +33,15 @@ describe('useFromRef', () => {
     expect(a.mounted).toBe(true);
     expect(a.mounted && a.isDirty).toBe(false);
     expect(a.mounted && a.get()).toStrictEqual({ success: true, value: 'abc' });
-    a.mounted && a.set('def');
+    safeSet(a, 'def');
     expect(a.mounted && a.isDirty).toBe(true);
     expect(setter).toHaveBeenCalledTimes(1);
     expect(setter).toHaveBeenCalledWith('def');
-
-    if (a.mounted) a.get = (): SugarValue<string> => ({ success: true, value: 'ghi' });
+    safeEdit(a, 'ghi');
     onChange();
     expect(a.mounted && a.isDirty).toBe(true);
     expect(a.mounted && a.get()).toStrictEqual({ success: true, value: 'ghi' });
-    if (a.mounted) a.get = (): SugarValue<string> => ({ success: true, value: 'abc' });
+    safeEdit(a, 'abc');
     onBlur();
     expect(a.mounted && a.isDirty).toBe(false);
 
