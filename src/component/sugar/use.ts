@@ -73,7 +73,7 @@ export function mountSugar<T, U extends SugarObject>(
     debug('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    set<U>(fields, options.reshape.deform(value));
+    set<U>(fields, options.reshape.deform(value), 'value');
   };
 
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
@@ -89,6 +89,11 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.mounted = true;
   updateSugar.get = getter;
   updateSugar.set = setter;
+  updateSugar.setTemplate = (template: T): void => {
+    sugar.template = template;
+    const newTemplate = options.reshape.deform(template);
+    set<U>(fields, newTemplate, 'template');
+  };
   updateSugar.isDirty = false;
   updateSugar.upstream.fire('mounted', {});
 
@@ -134,13 +139,17 @@ export function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields'])
   };
 }
 
-export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'], value: T): void {
+export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'], value: T, type: 'value' | 'template'): void {
   for (const key in fields) {
     const sugar = fields[key];
     if (!sugar.mounted) {
       debug('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
-    } else {
+      continue;
+    }
+    if (type === 'value') {
       sugar.set(value[key]);
+    } else {
+      sugar.setTemplate(value[key]);
     }
   }
 }
@@ -155,7 +164,7 @@ export function mountCompleteEvent<T extends SugarObject>(
       const fields = fieldsRef.current;
       if (fields === undefined) return;
       if (Object.values(fields).some(v => !v.mounted)) return;
-      set<T>(fields, template);
+      set<T>(fields, template, 'value');
     });
   });
 }

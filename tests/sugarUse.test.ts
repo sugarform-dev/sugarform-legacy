@@ -136,6 +136,7 @@ describe('useObject', () => {
       mounted: true,
       get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
       set: setterOfB,
+      setTemplate: jest.fn(),
       isDirty: false,
     };
     fields.b.upstream.fire('mounted', {});
@@ -146,6 +147,7 @@ describe('useObject', () => {
       mounted: true,
       get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
       set: setterOfC,
+      setTemplate: jest.fn(),
       isDirty: false,
     };
     fields.c.upstream.fire('mounted', {});
@@ -164,6 +166,40 @@ describe('useObject', () => {
     expect(setterOfC).toHaveBeenCalledTimes(2);
     wrapped.a.mounted && wrapped.a.set({ b: 'foo', c: 'bar' });
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
+
+  });
+
+  it('should work setTemplate', () => {
+    const original = {
+      a: { b: 'foo', c: 'bar' },
+    };
+    const wrapped = wrapSugar('foo', original);
+    const { result: { current: { fields } } } = renderHook(() => wrapped.a.useObject({}));
+
+    const setterOfB = jest.fn();
+    const setterOfC = jest.fn();
+    fields.b.useFromRef({
+      get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
+      set: setterOfB,
+    });
+    fields.c.useFromRef({
+      get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
+      set: setterOfC,
+    });
+
+    expect(fields.b.mounted && fields.b.isDirty).toBe(false);
+    expect(fields.c.mounted && fields.c.isDirty).toBe(false);
+
+    expect(wrapped.a.mounted).toBe(true);
+    expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
+    wrapped.a.mounted && wrapped.a.setTemplate({ b: 'foo', c: 'baz' });
+
+    expect(fields.b.mounted && fields.b.isDirty).toBe(false);
+    expect(fields.c.mounted && fields.c.isDirty).toBe(true);
+    expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(true);
+
+    expect(setterOfB).not.toHaveBeenCalled();
+    expect(setterOfC).not.toHaveBeenCalled();
 
   });
 
