@@ -4,8 +4,17 @@ import type { Sugar, SugarValue } from '../src/component/sugar';
 import { SugarDownstreamEventEmitter } from '../src/util/events/downstreamEvent';
 import { SugarUpstreamEventEmitter } from '../src/util/events/upstreamEvent';
 import { renderHook } from '@testing-library/react';
+import { createEmptySugar } from '../src/component/sugar/create';
+import { SugarFormError } from '../src/util/error';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+describe('createEmptySugar', () => {
+  it('error call useObject from non-SugarObject sugar', () => {
+    const sugar = createEmptySugar('foo', 3);
+    expect(sugar.useObject).toThrow(SugarFormError);
+  });
+});
 
 describe('wrapSugar', () => {
   it('should work', () => {
@@ -35,12 +44,14 @@ describe('wrapSugar', () => {
         upstream: expect.any(SugarUpstreamEventEmitter),
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
+        useObject: expect.any(Function) as never,
         useFromRef: expect.any(Function),
       },
     };
 
     expect(wrapped).toStrictEqual(expected);
   });
+
 });
 
 /* eslint-disable-next-line max-lines-per-function */
@@ -61,6 +72,7 @@ describe('useObject', () => {
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
         useFromRef: expect.any(Function),
+        useObject: expect.any(Function) as never,
       },
       c: {
         mounted: false,
@@ -70,6 +82,7 @@ describe('useObject', () => {
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
         useFromRef: expect.any(Function),
+        useObject: expect.any(Function) as never,
       },
     };
 
