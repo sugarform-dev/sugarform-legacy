@@ -24,7 +24,7 @@ export type SugarData<T> = {
   T extends SugarObject ?
     {
       use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
-      useObject: (options: SugarUser) => SugarObjectNode<T>
+      useObject: (options?: SugarUser) => SugarObjectNode<T>
     } : {
       use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
     }

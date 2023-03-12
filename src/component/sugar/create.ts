@@ -22,7 +22,7 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
 
   if (isSugarObject(template)) {
     (sugar as Sugar<SugarObject>).useObject =
-      (options: SugarUser): SugarObjectNode<SugarObject> =>
+      (options: SugarUser = {}): SugarObjectNode<SugarObject> =>
         useSugar<SugarObject, SugarObject>(
           sugar as Sugar<SugarObject>,
           {
