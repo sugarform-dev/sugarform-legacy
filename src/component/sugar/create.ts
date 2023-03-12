@@ -1,4 +1,5 @@
 import type { Sugar, SugarObjectNode, SugarUser, SugarUserReshaper, SugarValue } from '.';
+import { SugarFormError } from '../../util/error';
 import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
 import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
@@ -18,12 +19,10 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
     useFromRef:
       (param: { get: () => SugarValue<T>, set: (value: T) => void }) =>
         useSugarFromRef(sugar, param),
-  };
-
-  if (isSugarObject(template)) {
-    (sugar as Sugar<SugarObject>).useObject =
-      (options: SugarUser<SugarObject> = {}): SugarObjectNode<SugarObject> =>
-        useSugar<SugarObject, SugarObject>(
+    useObject: (
+      isSugarObject(template) ?
+        (options: SugarUser<SugarObject> = {}): SugarObjectNode<SugarObject> =>
+          useSugar<SugarObject, SugarObject>(
           sugar as Sugar<SugarObject>,
           {
             ...options,
@@ -32,8 +31,18 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
               deform: x => x,
             },
           } as SugarUserReshaper<SugarObject, SugarObject>,
-        );
-  }
+          )
+        : neverFunction(path, 'useObject')
+    ) as T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never,
+  };
 
   return sugar;
+}
+
+export function neverFunction(path: string, name: string): never {
+  const error: never =  ((): void => {
+    throw new SugarFormError('SF0002', `This function should not be called. at ${path} of ${name}`);
+  }) as unknown as never;
+
+  return error;
 }

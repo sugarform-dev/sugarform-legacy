@@ -12,7 +12,7 @@ export type Sugar<T> = SugarData<T> & ({
   isDirty: boolean,
 });
 
-export type SugarData<T> = {
+export interface SugarData<T> {
   path: string,
   template: T,
   upstream: SugarUpstreamEventEmitter,
@@ -20,15 +20,9 @@ export type SugarData<T> = {
   useFromRef: (param: { get: () => SugarValue<T>, set: (value: T) => void }) => {
     onChange: () => void, onBlur: () => void
   },
-} & (
-  T extends SugarObject ?
-    {
-      use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
-      useObject: (options?: SugarUser<T>) => SugarObjectNode<T>
-    } : {
-      use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
-    }
-);
+  use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
+  useObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
+}
 // ) & (
 //   T extends Array<infer U> ?
 //     { useArray: (options: SugarUserArray<U>) => SugarArrayNode<U> } :
