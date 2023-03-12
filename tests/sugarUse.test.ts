@@ -26,6 +26,7 @@ describe('wrapSugar', () => {
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
         useObject: expect.any(Function),
+        useFromRef: expect.any(Function),
       },
       d: {
         mounted: false,
@@ -34,6 +35,7 @@ describe('wrapSugar', () => {
         upstream: expect.any(SugarUpstreamEventEmitter),
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
+        useFromRef: expect.any(Function),
       },
     };
 
@@ -58,6 +60,7 @@ describe('useObject', () => {
         upstream: expect.any(SugarUpstreamEventEmitter),
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
+        useFromRef: expect.any(Function),
       },
       c: {
         mounted: false,
@@ -66,6 +69,7 @@ describe('useObject', () => {
         upstream: expect.any(SugarUpstreamEventEmitter),
         downstream: expect.any(SugarDownstreamEventEmitter),
         use: expect.any(Function),
+        useFromRef: expect.any(Function),
       },
     };
 

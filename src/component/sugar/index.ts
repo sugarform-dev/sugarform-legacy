@@ -17,6 +17,9 @@ export type SugarData<T> = {
   template: T,
   upstream: SugarUpstreamEventEmitter,
   downstream: SugarDownstreamEventEmitter,
+  useFromRef: (param: { get: () => SugarValue<T>, set: (value: T) => void }) => {
+    onChange: () => void, onBlur: () => void
+  },
 } & (
   T extends SugarObject ?
     {
