@@ -1,5 +1,5 @@
 import { describe, it } from '@jest/globals';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import type { Sugar, SugarValue } from '../src/component/sugar';
 import { useSugarForm } from '../src/component/sugarform';
 
@@ -7,7 +7,7 @@ describe('useSugarForm', () => {
 
   it('should work', () => {
     const { result: { current: { sugar, render } } } =
-      renderHook(() => useSugarForm<{ a: 'foo' }>({ defaultValue: { a: 'foo' } }));
+      renderHook(() => useSugarForm<{ a: string }>({ defaultValue: { a: 'foo' } }));
 
     const { result: { current: { fields: { a } } } } =
       renderHook(() => sugar.useObject({}));
@@ -23,6 +23,32 @@ describe('useSugarForm', () => {
         a: 'foo',
       },
     });
+  });
+
+  it('should work with isDirtyState', () => {
+
+    const { result: { current: { sugar, useIsDirtyState } } } =
+      renderHook(() => useSugarForm<{ a: string }>({ defaultValue: { a: 'foo' } }));
+
+    const { result: { current: { fields: { a } } } } =
+      renderHook(() => sugar.useObject({}));
+
+    const { result: { current: { onBlur } } } = renderHook(() => a.useFromRef({
+      get: () => ({ success: true, value: 'foo' }),
+      set: () => null,
+    }));
+
+    const { result: isDirtyResult } = renderHook(() => useIsDirtyState());
+
+    expect(isDirtyResult.current).toBe(false);
+
+    act(() => {
+      if (a.mounted) a.get = (): SugarValue<string> => ({ success: true, value: 'bar' });
+      onBlur();
+    });
+
+    expect(isDirtyResult.current).toBe(true);
+
   });
 
 });
