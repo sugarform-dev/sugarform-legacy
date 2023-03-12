@@ -33,10 +33,12 @@ describe('useFromRef', () => {
     expect(a.mounted).toBe(true);
     expect(a.mounted && a.isDirty).toBe(false);
     expect(a.mounted && a.get()).toStrictEqual({ success: true, value: 'abc' });
+    expect(setter).toHaveBeenCalledTimes(1);
+    expect(setter).toHaveBeenLastCalledWith('abc');
     safeSet(a, 'def');
     expect(a.mounted && a.isDirty).toBe(true);
-    expect(setter).toHaveBeenCalledTimes(1);
-    expect(setter).toHaveBeenCalledWith('def');
+    expect(setter).toHaveBeenCalledTimes(2);
+    expect(setter).toHaveBeenLastCalledWith('def');
     safeEdit(a, 'ghi');
     onChange();
     expect(a.mounted && a.isDirty).toBe(true);
