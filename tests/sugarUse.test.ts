@@ -138,6 +138,7 @@ describe('useObject', () => {
       set: setterOfB,
       isDirty: false,
     };
+    fields.b.upstream.fire('mounted', {});
 
     const setterOfC = jest.fn();
     fields.c = {
@@ -147,6 +148,7 @@ describe('useObject', () => {
       set: setterOfC,
       isDirty: false,
     };
+    fields.c.upstream.fire('mounted', {});
 
     expect(wrapped.a.mounted).toBe(true);
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
