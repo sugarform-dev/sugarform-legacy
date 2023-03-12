@@ -35,6 +35,7 @@ export function useSugar<T, U extends SugarObject>(
   };
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function mountSugar<T, U extends SugarObject>(
   sugar: Sugar<T>,
   options: SugarUserReshaper<T, U>,
@@ -50,9 +51,21 @@ export function mountSugar<T, U extends SugarObject>(
     if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
     const value = get<U>(fields);
     debug('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}, Path: ${sugar.path}`);
-    return !value.success ? value : {
+    if (!value.success) return value;
+    const u: U = value.value;
+    const validators: Array<{ condition: (value: U) => boolean }> =
+      'validation' in options ? options.validation ?? [] : [];
+    if (
+      validators.some(({ condition }) => !condition(u))
+    ) {
+      return {
+        success: false,
+        value: value.value,
+      };
+    }
+    return {
       success: true,
-      value: options.reshape.transform(value.value),
+      value: options.reshape.transform(u),
     };
   };
 

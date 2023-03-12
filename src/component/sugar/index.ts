@@ -24,7 +24,7 @@ export type SugarData<T> = {
   T extends SugarObject ?
     {
       use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
-      useObject: (options?: SugarUser) => SugarObjectNode<T>
+      useObject: (options?: SugarUser<T>) => SugarObjectNode<T>
     } : {
       use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
     }
@@ -43,11 +43,11 @@ export type SugarValue<T> = {
   value: unknown,
 };
 
-export interface SugarUser {
-
+export interface SugarUser<U extends SugarObject> {
+  validation?: Array<{ condition: (value: U) => boolean }>
 }
 
-export interface SugarUserReshaper<T, U extends SugarObject> extends SugarUser {
+export interface SugarUserReshaper<T, U extends SugarObject> extends SugarUser<U> {
   reshape: {
     transform: (value: U) => T,
     deform: (value: T) => U,
