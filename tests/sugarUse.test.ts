@@ -131,15 +131,17 @@ describe('useObject', () => {
     const { result: { current: { fields } } } = renderHook(() => wrapped.a.useObject({}));
 
     const setterOfB = jest.fn(data => fields.b.upstream.fire('updateDirty', { isDirty: data !== 'foo' }));
-    fields.b.useFromRef({
-      get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
-      set: setterOfB,
-    });
-
     const setterOfC = jest.fn();
-    fields.c.useFromRef({
-      get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
-      set: setterOfC,
+    renderHook(() => {
+      fields.b.useFromRef({
+        get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
+        set: setterOfB,
+      });
+
+      fields.c.useFromRef({
+        get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
+        set: setterOfC,
+      });
     });
 
     expect(wrapped.a.mounted).toBe(true);
@@ -148,13 +150,13 @@ describe('useObject', () => {
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
     expect(setterOfB).toHaveBeenCalledWith('foo');
     expect(setterOfC).toHaveBeenCalledWith('bar');
-    wrapped.a.mounted && wrapped.a.set({ b: 'baz', c: 'qux' });
+    renderHook(() => wrapped.a.mounted && wrapped.a.set({ b: 'baz', c: 'qux' }));
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(true);
     expect(setterOfB).toHaveBeenLastCalledWith('baz');
     expect(setterOfC).toHaveBeenLastCalledWith('qux');
     expect(setterOfB).toHaveBeenCalledTimes(2);
     expect(setterOfC).toHaveBeenCalledTimes(2);
-    wrapped.a.mounted && wrapped.a.set({ b: 'foo', c: 'bar' });
+    renderHook(() => wrapped.a.mounted && wrapped.a.set({ b: 'foo', c: 'bar' }));
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
 
   });
@@ -168,13 +170,16 @@ describe('useObject', () => {
 
     const setterOfB = jest.fn();
     const setterOfC = jest.fn();
-    fields.b.useFromRef({
-      get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
-      set: setterOfB,
-    });
-    fields.c.useFromRef({
-      get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
-      set: setterOfC,
+
+    renderHook(() => {
+      fields.b.useFromRef({
+        get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
+        set: setterOfB,
+      });
+      fields.c.useFromRef({
+        get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
+        set: setterOfC,
+      });
     });
 
     expect(fields.b.mounted && fields.b.isDirty).toBe(false);
