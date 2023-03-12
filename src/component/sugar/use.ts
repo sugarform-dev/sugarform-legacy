@@ -89,6 +89,11 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.mounted = true;
   updateSugar.get = getter;
   updateSugar.set = setter;
+  updateSugar.setTemplate = (template: T): void => {
+    sugar.template = template;
+    const newTemplate = options.reshape.deform(template);
+    setTemplate<U>(fields, newTemplate);
+  };
   updateSugar.isDirty = false;
   updateSugar.upstream.fire('mounted', {});
 
@@ -141,6 +146,17 @@ export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'],
       debug('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
     } else {
       sugar.set(value[key]);
+    }
+  }
+}
+
+export function setTemplate<T extends SugarObject>(fields: SugarObjectNode<T>['fields'], value: T): void {
+  for (const key in fields) {
+    const sugar = fields[key];
+    if (!sugar.mounted) {
+      debug('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
+    } else {
+      sugar.setTemplate(value[key]);
     }
   }
 }

@@ -21,6 +21,10 @@ export function useSugarFromRef<T>(
     param.set(v);
     refreshDirty();
   };
+  updateSugar.setTemplate = (v): void => {
+    sugar.template = v;
+    refreshDirty();
+  };
   updateSugar.isDirty = false;
 
   return {
