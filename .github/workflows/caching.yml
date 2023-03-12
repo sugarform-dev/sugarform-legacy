@@ -1,3 +1,4 @@
+name: shared-yarn-cache
 on:
   push:
     branches:
