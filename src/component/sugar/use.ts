@@ -90,8 +90,11 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.get = getter;
   updateSugar.set = setter;
   updateSugar.setTemplate = (template: T, mode: SetTemplateMode = 'merge'): void => {
-    sugar.template = template;
-    const newTemplate = options.reshape.deform(template);
+    sugar.template = mode === 'replace' ? template : {
+      ...sugar.template,
+      ...template,
+    };
+    const newTemplate = options.reshape.deform(sugar.template);
     set<U>(fields, newTemplate, { type: 'template', mode });
   };
   updateSugar.isDirty = false;
