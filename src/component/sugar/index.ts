@@ -4,13 +4,14 @@ import type { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent'
 import type { SugarObject } from '../../util/object';
 import type { MutableRefObject } from 'react';
 
+export type SetTemplateMode = 'replace' | 'merge';
 export type Sugar<T> = SugarData<T> & ({
   mounted: false,
 } | {
   mounted: true,
   get: () => SugarValue<T>,
   set: (value: T) => void,
-  setTemplate: (template: T) => void,
+  setTemplate: (template: T, mode: SetTemplateMode) => void,
   isDirty: boolean,
 });
 
