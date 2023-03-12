@@ -92,6 +92,8 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.isDirty = false;
   updateSugar.upstream.fire('mounted', {});
 
+  mountCompleteEvent(fields, fieldsRef, template);
+
   return { fields };
 }
 
@@ -141,4 +143,19 @@ export function set<T extends SugarObject>(fields: SugarObjectNode<T>['fields'],
       sugar.set(value[key]);
     }
   }
+}
+
+export function mountCompleteEvent<T extends SugarObject>(
+  fields: SugarObjectNode<T>['fields'],
+  fieldsRef: MutableRefObject<SugarObjectNode<T>['fields'] | undefined>,
+  template: T,
+): void {
+  Object.values(fields).map((v): void => {
+    v.upstream.listen('mounted', () => {
+      const fields = fieldsRef.current;
+      if (fields === undefined) return;
+      if (Object.values(fields).some(v => !v.mounted)) return;
+      set<T>(fields, template);
+    });
+  });
 }

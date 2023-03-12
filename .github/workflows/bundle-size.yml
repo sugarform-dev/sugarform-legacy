@@ -45,6 +45,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.base_ref }}
       - name: Restore shared yarn cache
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
         uses: actions/cache/restore@v3
