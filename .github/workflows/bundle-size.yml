@@ -45,17 +45,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Restore pr yarn cache
-        uses: actions/cache@v3
-        id: restore-yarn-cache
-        with:
-          path: .yarn/cache
-          key: ${{ runner.os }}-yarn-pr-${{ github.event.number }}
       - name: Restore shared yarn cache
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
         uses: actions/cache/restore@v3
         with:
-          path: ~/.yarn/cache
+          path: .yarn/cache
           key: ${{ runner.os }}-yarn-shared
       - name: Setup Node.js
         uses: actions/setup-node@v3
