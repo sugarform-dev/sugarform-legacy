@@ -92,7 +92,7 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.setTemplate = (template: T): void => {
     sugar.template = template;
     const newTemplate = options.reshape.deform(template);
-    set<U>(fields, newTemplate, 'value');
+    set<U>(fields, newTemplate, 'template');
   };
   updateSugar.isDirty = false;
   updateSugar.upstream.fire('mounted', {});
