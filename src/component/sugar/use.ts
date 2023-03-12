@@ -92,6 +92,8 @@ export function mountSugar<T, U extends SugarObject>(
   updateSugar.isDirty = false;
   updateSugar.upstream.fire('mounted', {});
 
+  setter(options.reshape.transform(template));
+
   return { fields };
 }
 
