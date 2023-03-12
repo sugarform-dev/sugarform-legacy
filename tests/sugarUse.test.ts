@@ -76,6 +76,40 @@ describe('useObject', () => {
     expect(fields).toStrictEqual(expected);
   });
 
+  it('should work validation', () => {
+    const original = {
+      a: { b: 'foo', c: 'bar' },
+    };
+    const wrapped = wrapSugar<{
+      a: {
+        b: string,
+        c: string,
+      }
+    }>('foo', original);
+    const { result: { current: { fields } } } = renderHook(() => wrapped.a.useObject({
+      validation: [
+        { condition: x => x.c !== 'qux' },
+      ],
+    }));
+
+    renderHook(() => {
+      fields.b.useFromRef({ get: () => ({ success: true, value: 'foo' }), set: () => null });
+      fields.c.useFromRef({ get: () => ({ success: true, value: 'bar' }), set: () => null });
+    });
+
+    expect(wrapped.a.mounted).toBe(true);
+    expect(wrapped.a.mounted && wrapped.a.get()).toStrictEqual({
+      success: true, value: { b: 'foo', c: 'bar' },
+    });
+
+    if (fields.c.mounted) fields.c.get = (): SugarValue<string> => (
+      { success: true, value: 'qux' }
+    );
+    expect(wrapped.a.mounted && wrapped.a.get()).toStrictEqual({
+      success: false, value: { b: 'foo', c: 'qux' },
+    });
+  });
+
   it('should get/set/isDirty work', () => {
     const original = {
       a: { b: 'foo', c: 'bar' },
