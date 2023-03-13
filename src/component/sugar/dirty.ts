@@ -8,6 +8,5 @@ export function setDirty<T>(sugar: Sugar<T>, isDirty: boolean): void {
   }
   if (sugar.isDirty === isDirty) return;
   sugar.isDirty = isDirty;
-  console.trace('updateDirty', { path: sugar.path, isDirty });
   sugar.upstream.fire('updateDirty', { isDirty });
 }
