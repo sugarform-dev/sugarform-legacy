@@ -40,6 +40,8 @@ export function useSugarFromRef<T>(
   };
   updateSugar.isDirty = false;
 
+  updateSugar.setTemplate(sugar.template);
+
   return {
     onChange: (): void => {
       if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}`);
