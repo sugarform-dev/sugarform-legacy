@@ -11,6 +11,7 @@ export function useSugarFromRef<T>(
 } {
 
   const refreshDirty = (): void => {
+    console.log({ path: sugar.path });
     if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
     const value = sugar.get();
     const dirty = !value.success || sugar.template !== value.value;
