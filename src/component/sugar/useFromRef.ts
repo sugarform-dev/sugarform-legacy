@@ -31,11 +31,12 @@ export function useSugarFromRef<T>(
     param.get() ?? { success: true, value: defaultValue.current ?? sugar.template };
   updateSugar.set = (v): void => {
     setterWithDefault(v);
-    setTimeout(() => refreshDirty(), 0);
+    refreshDirty();
   };
   updateSugar.setTemplate = (v): void => {
     sugar.template = v;
-    updateSugar.set(v);
+    setterWithDefault(v);
+    setTimeout(refreshDirty, 0);
   };
   updateSugar.isDirty = false;
 
