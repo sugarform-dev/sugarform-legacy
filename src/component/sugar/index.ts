@@ -20,7 +20,7 @@ export interface SugarData<T> {
   template: T,
   upstream: SugarUpstreamEventEmitter,
   downstream: SugarDownstreamEventEmitter,
-  useFromRef: (param: { get: () => SugarValue<T>, set: (value: T) => boolean }) => {
+  useFromRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
     onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
   },
   use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,

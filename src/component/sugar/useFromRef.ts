@@ -5,7 +5,7 @@ import { SugarFormError } from '../../util/error';
 import { setDirty } from './dirty';
 
 export function useSugarFromRef<T>(
-  sugar: Sugar<T>, param: { get: () => SugarValue<T>, set: (value: T) => boolean },
+  sugar: Sugar<T>, param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean },
 ): {
   onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
 } {
@@ -13,7 +13,8 @@ export function useSugarFromRef<T>(
   const refreshDirty = (): void => {
     if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
     const value = sugar.get();
-    setDirty(sugar, !value.success || sugar.template !== value.value);
+    const dirty = !value.success || sugar.template !== value.value;
+    setDirty(sugar, dirty);
   };
 
   const defaultValue = useRef<T | undefined>(undefined);
@@ -26,21 +27,24 @@ export function useSugarFromRef<T>(
 
   const updateSugar = sugar as Sugar<T> & { mounted: true };
   updateSugar.mounted = true;
-  updateSugar.get = param.get;
+  updateSugar.get = (): SugarValue<T> =>
+    param.get() ?? { success: true, value: defaultValue.current ?? sugar.template };
   updateSugar.set = (v): void => {
     setterWithDefault(v);
     refreshDirty();
   };
   updateSugar.setTemplate = (v): void => {
     sugar.template = v;
-    refreshDirty();
+    setterWithDefault(v);
+    setTimeout(refreshDirty, 0);
   };
   updateSugar.isDirty = false;
 
-  setterWithDefault(sugar.template);
+  updateSugar.setTemplate(sugar.template);
+
   return {
     onChange: (): void => {
-      if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
+      if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}`);
       if (!sugar.isDirty) setDirty(sugar, true);
     },
     onBlur: refreshDirty,
