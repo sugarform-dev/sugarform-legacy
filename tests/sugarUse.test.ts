@@ -134,14 +134,17 @@ describe('useObject', () => {
 
     const setterOfB = jest.fn(() => true);
     const setterOfC = jest.fn(() => true);
+
+    const valueOfB = { data: 'foo' };
+    const valueOfC = { data: 'bar' };
     renderHook(() => {
       fields.b.useFromRef({
-        get: (): SugarValue<string> => ({ success: true, value: 'foo' }),
+        get: (): SugarValue<string> => ({ success: true, value: valueOfB.data }),
         set: setterOfB,
       });
 
       fields.c.useFromRef({
-        get: (): SugarValue<string> => ({ success: true, value: 'bar' }),
+        get: (): SugarValue<string> => ({ success: true, value: valueOfC.data }),
         set: setterOfC,
       });
     });
@@ -152,6 +155,8 @@ describe('useObject', () => {
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
     expect(setterOfB).toHaveBeenCalledWith('foo');
     expect(setterOfC).toHaveBeenCalledWith('bar');
+    valueOfB.data = 'baz';
+    valueOfC.data = 'qux';
     renderHook(() => wrapped.a.mounted && wrapped.a.set({ b: 'baz', c: 'qux' }));
     expect(setterOfB).toHaveBeenLastCalledWith('baz');
     expect(setterOfC).toHaveBeenLastCalledWith('qux');
@@ -160,6 +165,8 @@ describe('useObject', () => {
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(true);
     expect(setterOfB).toHaveBeenCalledTimes(2);
     expect(setterOfC).toHaveBeenCalledTimes(2);
+    valueOfB.data = 'foo';
+    valueOfC.data = 'bar';
     renderHook(() => wrapped.a.mounted && wrapped.a.set({ b: 'foo', c: 'bar' }));
     expect(wrapped.a.mounted && wrapped.a.isDirty).toBe(false);
 
