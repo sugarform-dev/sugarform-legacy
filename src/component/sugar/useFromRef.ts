@@ -25,8 +25,8 @@ export function useSugarFromRef<T>(
     }
   };
 
-  const updateSugar = sugar as Sugar<T> & { mounted: true };
-  updateSugar.mounted = true;
+  const updateSugar = sugar  as Sugar<T> & { mounted: true };
+
   updateSugar.get = (): SugarValue<T> =>
     param.get() ?? { success: true, value: defaultValue.current ?? sugar.template };
   updateSugar.set = (v): void => {
@@ -38,9 +38,12 @@ export function useSugarFromRef<T>(
     setterWithDefault(v);
     setTimeout(refreshDirty, 0);
   };
-  updateSugar.isDirty = false;
 
-  updateSugar.setTemplate(sugar.template);
+  if (!sugar.mounted) {
+    updateSugar.mounted = true;
+    updateSugar.isDirty = false;
+    updateSugar.setTemplate(sugar.template);
+  }
 
   return {
     onChange: (): void => {
