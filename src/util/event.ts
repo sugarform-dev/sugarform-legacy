@@ -5,6 +5,10 @@ export class SugarEventEmitter<EventTable extends Record<string, Record<string, 
     Record<keyof EventTable, Array<(param: EventTable[keyof EventTable]) => void>>
   > = {};
 
+  private onceListeners: Partial<
+    Record<keyof EventTable, Array<(param: EventTable[keyof EventTable]) => void>>
+  > = {};
+
 
   public listen<K extends keyof EventTable>(
     eventName: K, callback: (param: EventTable[K]) => void,
@@ -19,9 +23,32 @@ export class SugarEventEmitter<EventTable extends Record<string, Record<string, 
     listener.push(callback);
   }
 
+  public listenOnce<K extends keyof EventTable>(
+    eventName: K, callback: (param: EventTable[K]) => void,
+  ): void {
+    if (!this.onceListeners[eventName]) {
+      this.onceListeners[eventName] = [];
+    }
+    const onceListener: Array<(param: EventTable[K]) => void> | undefined =
+      this.onceListeners[eventName];
+    if (onceListener === undefined) {
+      throw new SugarFormError('SF0002', 'SugarEventEmitter#listenOnce');
+    }
+    onceListener.push(callback);
+  }
+
   public fire<K extends keyof EventTable>(eventName: K, param: EventTable[K]): void {
     const listener: Array<(param: EventTable[K]) => void> | undefined = this.listeners[eventName];
-    if (listener === undefined) return;
-    listener.forEach(l => l(param));
+    const onceListener: Array<(param: EventTable[K]) => void> | undefined =
+        this.onceListeners[eventName];
+
+    if (listener !== undefined) {
+      listener.forEach(l => l(param));
+    }
+
+    if (onceListener !== undefined) {
+      onceListener.forEach(l => l(param));
+      this.onceListeners[eventName] = [];
+    }
   }
 }
