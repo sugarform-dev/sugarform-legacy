@@ -25,7 +25,7 @@ export interface SugarData<T> {
   },
   use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
   useObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
-  useArray: T extends Array<infer U> ? (options?: SugarArrayUser) => SugarArrayNode<U> : never;
+  useArray: T extends Array<infer U> ? (options?: SugarArrayUser<T>) => SugarArrayNode<U> : never;
 }
 
 export type SugarValue<T> = {
@@ -51,8 +51,8 @@ export interface SugarObjectNode<U extends SugarObject> {
   fields: { [K in keyof U]: Sugar<U[K]> },
 }
 
-export interface SugarArrayUser {
-
+export interface SugarArrayUser<T> {
+  template: T,
 }
 
 export interface SugarArrayNode<T> {
