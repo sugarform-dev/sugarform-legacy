@@ -17,6 +17,17 @@ describe('event/SugarEventEmitter', () => {
     expect(listener).toHaveBeenCalledWith({ a: 1, b: 2 });
   });
 
+  it('should called listener only once', () => {
+    const emitter = new TestEventEmitter();
+    const listener = jest.fn();
+    emitter.listenOnce('test', listener);
+    emitter.fire('test', { a: 1, b: 2 });
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(listener).toHaveBeenCalledWith({ a: 1, b: 2 });
+    emitter.fire('test', { a: 1, b: 2 });
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   it('should work with multiple listener', () => {
     const emitter = new TestEventEmitter();
     const listener1 = jest.fn();
