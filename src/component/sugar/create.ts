@@ -1,9 +1,10 @@
-import type { Sugar, SugarObjectNode, SugarUser, SugarUserReshaper, SugarValue } from '.';
+import type { Sugar, SugarArrayNode, SugarArrayUser, SugarObjectNode, SugarUser, SugarUserReshaper, SugarValue } from '.';
 import { SugarFormError } from '../../util/error';
 import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
 import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
 import { isSugarObject } from '../../util/object';
+import { useArray } from './array';
 import { useSugar } from './use';
 import { useSugarFromRef } from './useFromRef';
 
@@ -34,6 +35,14 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
           )
         : neverFunction(path, 'useObject')
     ) as T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never,
+    useArray: (
+      Array.isArray(template) ? (
+        (
+          sugar: Sugar<T[]>,
+          options: SugarArrayUser<T>,
+        ): SugarArrayNode<T> => useArray(sugar, options))
+        : neverFunction(path, 'useArray')
+    ) as T extends Array<infer U> ? (options?: SugarArrayUser<T>) => SugarArrayNode<U> : never,
   };
 
   return sugar;
