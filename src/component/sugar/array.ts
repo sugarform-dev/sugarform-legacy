@@ -1,6 +1,5 @@
 import { useId, useRef, useState } from 'react';
 import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '.';
-import { SugarFormError } from '../../util/error';
 import { debug } from '../../util/logger';
 import { createEmptySugar } from './create';
 import { setDirty } from './dirty';
@@ -29,17 +28,17 @@ export function useArray<T>(
   };
 
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
-    if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-
-    notDirtyCheck:
-    if (!isDirty) {
-      if (keys.length !== sugar.template.length) break notDirtyCheck;
-      if (keys.some(i => {
-        const managed = getManagedSugar(i);
-        return managed.mounted && managed.isDirty;
-      })) return;
-    }
-    setDirty(sugar, isDirty);
+    sugar.asMounted(sugar => {
+      notDirtyCheck:
+      if (!isDirty) {
+        if (keys.length !== sugar.template.length) break notDirtyCheck;
+        if (keys.some(i => {
+          const managed = getManagedSugar(i);
+          return managed.mounted && managed.isDirty;
+        })) return;
+      }
+      setDirty(sugar, isDirty);
+    });
   };
 
   if (!sugar.mounted) {

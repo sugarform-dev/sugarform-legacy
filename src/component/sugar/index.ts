@@ -20,7 +20,7 @@ export interface SugarData<T> {
   template: T,
   upstream: SugarUpstreamEventEmitter,
   downstream: SugarDownstreamEventEmitter,
-  asMounted: (consumer: (mountedSugar: SugarData<T> & { mounted: true }) => void) => void,
+  asMounted: (consumer: (mountedSugar: Sugar<T> & { mounted: true }) => void) => void,
   useFromRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
     onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
   },
