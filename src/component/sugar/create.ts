@@ -38,7 +38,6 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
     useArray: (
       Array.isArray(template) ? (
         (
-          sugar: Sugar<T[]>,
           options: SugarArrayUser<T>,
         ): SugarArrayNode<T> => useArray(sugar, options))
         : neverFunction(path, 'useArray')

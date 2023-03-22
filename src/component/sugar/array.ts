@@ -10,16 +10,19 @@ export function useArray<T>(
   sugar: Sugar<T[]>,
   options: SugarArrayUser<T>,
 ): SugarArrayNode<T> {
-
   const newId = useCountingId();
   const managedSugars = useRef<Array<{ id: string, sugar: Sugar<T> }>>([]);
-  const defaultKeys: string[] = [];
+  let defaultKeys: string[] = [];
 
   const getManagedSugar = (id: string, template: T = options.template): Sugar<T> => {
     const managed = managedSugars.current.find(s => s.id === id);
     if (managed === undefined) {
       const newSugar = createEmptySugar(sugar.path, template);
       managedSugars.current.push({ id, sugar: newSugar });
+      newSugar.upstream.listen('updateDirty', ({ isDirty }) => {
+        if (!keys.includes(id)) return;
+        dirtyControl({ isDirty });
+      });
       return newSugar;
     }
     return managed.sugar;
@@ -65,10 +68,6 @@ export function useArray<T>(
         managed.upstream.listenOnce('mounted', () => {
           ( managed as Sugar<T> & { mounted: true } ).set(v);
         });
-        managed.upstream.listen('updateDirty', ({ isDirty }) => {
-          if (!keys.includes(id)) return;
-          dirtyControl({ isDirty });
-        });
         return id;
       });
       setKeys(keys);
@@ -87,11 +86,18 @@ export function useArray<T>(
 
     mountedSugar.isDirty = false;
     mountedSugar.upstream.fire('mounted', {});
+
+    defaultKeys = sugar.template.map(v => {
+      const id = newId();
+      getManagedSugar(id, v);
+      return id;
+    });
   }
 
   const [ keys, setKeys ] = useState<string[]>(defaultKeys);
 
   return {
+    useNewId: () => newId(),
     useKeys: () => [ keys, (keys: string[]):void => setKeys(keys) ],
     items: keys.map(id => ({ id, sugar: getManagedSugar(id) })),
   };
