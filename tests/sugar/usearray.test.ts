@@ -13,7 +13,7 @@ describe('sugar.useArray', () => {
     const isDirty = renderHookResult(() => useIsDirtyState());
 
     const { useKeys, items } = renderHookResult(() => sugar.useArray({
-      template: [ 'foo' ],
+      template: 'foo',
     })).current;
     const [ keys ] = renderHookResult(() => useKeys()).current;
 
@@ -53,7 +53,7 @@ function componentMock(sugar: Sugar<string[]>): {
   useNewId: () => string;
 } {
   const { useKeys, items, useNewId } = renderHookResult(() => sugar.useArray({
-    template: [ 'foo' ],
+    template: 'foo',
   })).current;
   const [ keys, setKeys ] = renderHookResult(() => useKeys()).current;
 
