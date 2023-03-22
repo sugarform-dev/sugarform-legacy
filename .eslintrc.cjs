@@ -104,7 +104,7 @@ module.exports = {
     'max-classes-per-file': [ 'warn', 1 ],
     'max-depth': [ 'warn', 3 ],
     'max-len': [ 'warn', { code: 100, ignoreComments: true, ignoreStrings: true, ignoreTemplateLiterals: true }],
-    'max-lines-per-function': [ 'warn', 50 ],
+    'max-lines-per-function': [ 'warn', 100 ],
     'no-multi-str': [ 'warn' ],
     'object-shorthand': [ 'warn' ],
     'prefer-template': [ 'warn' ],

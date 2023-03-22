@@ -1,7 +1,6 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarValue } from '.';
-import { SugarFormError } from '../../util/error';
 import { setDirty } from './dirty';
 
 export function useSugarFromRef<T>(
@@ -9,14 +8,13 @@ export function useSugarFromRef<T>(
 ): {
   onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
 } {
-
   const refreshDirty = (): void => {
-    if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}}`);
-    const value = sugar.get();
-    const dirty = !value.success || sugar.template !== value.value;
-    setDirty(sugar, dirty);
+    sugar.asMounted(sugar => {
+      const value = sugar.get();
+      const dirty = !value.success || sugar.template !== value.value;
+      setDirty(sugar, dirty);
+    });
   };
-
   const defaultValue = useRef<T | undefined>(undefined);
 
   const setterWithDefault = (v: T): void => {
@@ -47,8 +45,9 @@ export function useSugarFromRef<T>(
 
   return {
     onChange: (): void => {
-      if (!sugar.mounted) throw new SugarFormError('SF0021', `Path: ${sugar.path}`);
-      if (!sugar.isDirty) setDirty(sugar, true);
+      sugar.asMounted(sugar => {
+        if (!sugar.isDirty) setDirty(sugar, true);
+      });
     },
     onBlur: refreshDirty,
     defaultValueRef: defaultValue,
