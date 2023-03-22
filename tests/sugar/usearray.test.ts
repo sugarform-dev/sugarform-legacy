@@ -1,7 +1,7 @@
 import { describe, it } from '@jest/globals';
 import { act } from '@testing-library/react';
 import type { Sugar } from '../../src';
-import { setSugarFormLogLevel, useSugarForm } from '../../src';
+import { useSugarForm } from '../../src';
 import { renderHookResult, TextBoxMock } from '../misc';
 
 // eslint-disable-next-line max-lines-per-function
@@ -12,17 +12,10 @@ describe('sugar.useArray', () => {
     })).current;
     const isDirty = renderHookResult(() => useIsDirtyState());
 
-    const { useKeys, items } = renderHookResult(() => sugar.useArray({
-      template: 'foo',
-    })).current;
-    const [ keys ] = renderHookResult(() => useKeys()).current;
+    const { keys, sugars, items } = componentMock(sugar);
 
     expect(keys.length).toBe(3);
     expect(items.length).toBe(3);
-
-    const sugars = items.map(v => new TextBoxMock(v.sugar));
-    act(() => sugars.forEach(v => v.mount()));
-
     expect(render()).toStrictEqual({ success: true, value: [ 'a', 'b', 'c' ] });
     expect(isDirty.current).toBe(false);
 
@@ -31,18 +24,16 @@ describe('sugar.useArray', () => {
     expect(render()).toStrictEqual({ success: true, value: [ 'a', 'b', 'd' ] });
 
   });
-  it('add element', () => {
-    setSugarFormLogLevel('DEBUG');
-    const { sugar, useIsDirtyState, render } = renderHookResult(() => useSugarForm<string[]>({
+  it('should work if it called twice', () => {
+    const { sugar } = renderHookResult(() => useSugarForm<string[]>({
       defaultValue: [ 'a', 'b', 'c' ],
     })).current;
-    const isDirty = renderHookResult(() => useIsDirtyState());
 
-    const a = componentMock(sugar);
-    expect(render()).toStrictEqual({ success: true, value: [ 'a', 'b', 'c' ] });
-    expect(isDirty.current).toBe(false);
+    componentMock(sugar);
+    const { keys, items } = componentMock(sugar);
 
-    act(() => a.setKeys([ ...a.keys,  a.useNewId() ]));
+    expect(keys.length).toBe(3);
+    expect(items.length).toBe(3);
   });
 });
 
@@ -51,6 +42,7 @@ function componentMock(sugar: Sugar<string[]>): {
   setKeys: (newKeys: string[]) => void;
   sugars: TextBoxMock[];
   useNewId: () => string;
+  items: Array<{ id: string, sugar: Sugar<string> }>;
 } {
   const { useKeys, items, useNewId } = renderHookResult(() => sugar.useArray({
     template: 'foo',
@@ -59,5 +51,5 @@ function componentMock(sugar: Sugar<string[]>): {
 
   const sugars = items.map(v => new TextBoxMock(v.sugar));
   act(() => sugars.forEach(v => v.mount()));
-  return { keys, setKeys, sugars, useNewId };
+  return { keys, setKeys, sugars, useNewId, items };
 }
