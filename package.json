@@ -51,7 +51,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint .",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
   },
   "publishConfig": {
     "access": "public"
