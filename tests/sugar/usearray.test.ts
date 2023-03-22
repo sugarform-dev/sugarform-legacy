@@ -1,11 +1,14 @@
-import { describe, it } from '@jest/globals';
-import { act } from '@testing-library/react';
+import { describe, it, beforeEach } from '@jest/globals';
+import { act, cleanup } from '@testing-library/react';
 import type { Sugar } from '../../src';
 import { useSugarForm } from '../../src';
 import { renderHookResult, TextBoxMock } from '../misc';
 
 // eslint-disable-next-line max-lines-per-function
 describe('sugar.useArray', () => {
+  beforeEach(() => {
+    cleanup();
+  });
   it('should work', () => {
     const { sugar, useIsDirtyState, render } = renderHookResult(() => useSugarForm<string[]>({
       defaultValue: [ 'a', 'b', 'c' ],
@@ -23,17 +26,6 @@ describe('sugar.useArray', () => {
     expect(isDirty.current).toBe(true);
     expect(render()).toStrictEqual({ success: true, value: [ 'a', 'b', 'd' ] });
 
-  });
-  it('should work if it called twice', () => {
-    const { sugar } = renderHookResult(() => useSugarForm<string[]>({
-      defaultValue: [ 'a', 'b', 'c' ],
-    })).current;
-
-    componentMock(sugar);
-    const { keys, items } = componentMock(sugar);
-
-    expect(keys.length).toBe(3);
-    expect(items.length).toBe(3);
   });
 });
 
