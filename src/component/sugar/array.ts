@@ -10,8 +10,11 @@ export function useArray<T>(
   options: SugarArrayUser<T>,
 ): SugarArrayNode<T> {
   const newId = useCountingId();
+  const mountedRef = useRef(false);
+
   const managedSugars = useRef<Array<{ id: string, sugar: Sugar<T> }>>([]);
   let defaultKeys: string[] = [];
+
 
   const getManagedSugar = (id: string, template: T = options.template): Sugar<T> => {
     const managed = managedSugars.current.find(s => s.id === id);
@@ -40,10 +43,14 @@ export function useArray<T>(
       setDirty(sugar, isDirty);
     });
   };
+  if (!mountedRef.current && sugar.mounted) {
+    debug('WARN', `Sugar is already mounted, but items are not initialized. Remounting... Path: ${sugar.path}`);
+    mountedRef.current = false;
+  }
 
-  if (!sugar.mounted) {
+  if (!mountedRef.current) {
     debug('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
-    const mountedSugar = sugar as Sugar<T[]> as Sugar<T[]> & { mounted: true };
+    const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
     mountedSugar.mounted = true;
 
     mountedSugar.isDirty = false;
@@ -54,6 +61,7 @@ export function useArray<T>(
       getManagedSugar(id, v);
       return id;
     });
+    mountedRef.current = true;
   }
 
   const [ keys, setKeys ] = useState<string[]>(defaultKeys);
