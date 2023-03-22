@@ -12,6 +12,7 @@ type Person = {
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
 
+// eslint-disable-next-line max-lines-per-function
 describe('sugar.useObject', () => {
   it('should work normal render', () => {
 
@@ -27,10 +28,7 @@ describe('sugar.useObject', () => {
     const name = new TextBoxMock(fields.name);
     const age = new TextBoxMock(fields.age);
 
-    act(() => {
-      name.mount();
-      age.mount();
-    });
+    act(() => { name.mount(); age.mount(); });
 
     expect(name.value).toBe('John');
     expect(age.value).toBe('20');
@@ -58,5 +56,31 @@ describe('sugar.useObject', () => {
       value: { name: 'John', age: '20' },
     });
 
+  });
+
+  it('should work settemplate', () => {
+
+    const { sugar, useIsDirtyState } = renderHookResult(() => useSugarForm<Person>({
+      defaultValue: {
+        name: 'John',
+        age: '20',
+      },
+    })).current;
+
+    const { fields } = renderHookResult(() => sugar.useObject({})).current;
+    const isDirty = renderHookResult(() => useIsDirtyState());
+    const name = new TextBoxMock(fields.name);
+    const age = new TextBoxMock(fields.age);
+
+    act(() => { name.mount(); age.mount(); });
+
+    expect(isDirty.current).toBe(false);
+    act(() => { if (sugar.mounted) sugar.set({ name: 'Jack', age: '21' }); });
+    expect(isDirty.current).toBe(true);
+    act(() => {
+      if (sugar.mounted) sugar.setTemplate({ name: 'Jack', age: '21' });
+      jest.runOnlyPendingTimers();
+    });
+    expect(isDirty.current).toBe(false);
   });
 });
