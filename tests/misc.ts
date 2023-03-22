@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import type { MutableRefObject } from 'react';
 import type { Sugar } from '../src';
-export const renderHookResult = <T,>(hook: () => T): T => renderHook(hook).result.current;
+export const renderHookResult = <T,>(hook: () => T): { current: T } => renderHook(hook).result;
 
 export class TextBoxMock {
 
@@ -22,7 +22,7 @@ export class TextBoxMock {
   }
 
   constructor(public sugar: Sugar<string>) {
-    const result = renderHookResult(() => sugar.useFromRef({
+    const { current: result } = renderHookResult(() => sugar.useFromRef({
       get: () => this.mounted ? { success: true, value: this.value } : undefined,
       set: (newValue) => {
         if (!this.mounted) {
