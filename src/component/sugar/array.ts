@@ -45,43 +45,6 @@ export function useArray<T>(
     debug('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
     const mountedSugar = sugar as Sugar<T[]> as Sugar<T[]> & { mounted: true };
     mountedSugar.mounted = true;
-    mountedSugar.get = (): SugarValue<T[]> => {
-      const values = keys.map(id => {
-        const managed = getManagedSugar(id);
-        if (!managed.mounted) {
-          debug('WARN', `Sugar is not mounted when tried to get. Path: ${managed.path}`);
-          return { success: false, value: null };
-        }
-        return managed.get();
-      });
-
-      return {
-        success: values.every(v => v.success),
-        value: values.map(v => v.value) as T[],
-      };
-    };
-    mountedSugar.set = (value: T[]): void => {
-      const keys = value.map((v, i) => {
-        const id = newId();
-        const managed = getManagedSugar(id, sugar.template[i] ?? options.template);
-        managed.upstream.listenOnce('mounted', () => {
-          ( managed as Sugar<T> & { mounted: true } ).set(v);
-        });
-        return id;
-      });
-      setKeys(keys);
-    };
-    mountedSugar.setTemplate = (template: T[], mode: SetTemplateMode = 'merge'): void => {
-      sugar.template = template;
-      keys.forEach((id, i) => {
-        const managed = getManagedSugar(id);
-        if (!managed.mounted) {
-          debug('WARN', `Sugar is not mounted when tried to set. Path: ${managed.path}`);
-          return;
-        }
-        managed.setTemplate(template[i] ?? options.template, mode);
-      });
-    };
 
     mountedSugar.isDirty = false;
     mountedSugar.upstream.fire('mounted', {});
@@ -94,6 +57,45 @@ export function useArray<T>(
   }
 
   const [ keys, setKeys ] = useState<string[]>(defaultKeys);
+
+  const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
+  mountedSugar.get = (): SugarValue<T[]> => {
+    const values = keys.map(id => {
+      const managed = getManagedSugar(id);
+      if (!managed.mounted) {
+        debug('WARN', `Sugar is not mounted when tried to get. Path: ${managed.path}`);
+        return { success: false, value: null };
+      }
+      return managed.get();
+    });
+
+    return {
+      success: values.every(v => v.success),
+      value: values.map(v => v.value) as T[],
+    };
+  };
+  mountedSugar.set = (value: T[]): void => {
+    const keys = value.map((v, i) => {
+      const id = newId();
+      const managed = getManagedSugar(id, sugar.template[i] ?? options.template);
+      managed.upstream.listenOnce('mounted', () => {
+        ( managed as Sugar<T> & { mounted: true } ).set(v);
+      });
+      return id;
+    });
+    setKeys(keys);
+  };
+  mountedSugar.setTemplate = (template: T[], mode: SetTemplateMode = 'merge'): void => {
+    sugar.template = template;
+    keys.forEach((id, i) => {
+      const managed = getManagedSugar(id);
+      if (!managed.mounted) {
+        debug('WARN', `Sugar is not mounted when tried to set. Path: ${managed.path}`);
+        return;
+      }
+      managed.setTemplate(template[i] ?? options.template, mode);
+    });
+  };
 
   return {
     useNewId: () => newId(),
