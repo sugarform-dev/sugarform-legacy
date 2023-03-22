@@ -15,6 +15,15 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
     template,
     upstream: new SugarUpstreamEventEmitter(),
     downstream: new SugarDownstreamEventEmitter(),
+    asMounted: (consumer: (mountedSugar: Sugar<T> & { mounted: true }) => void): void => {
+      if (sugar.mounted) {
+        consumer(sugar);
+      } else {
+        sugar.upstream.listenOnce('mounted', () => {
+          consumer(sugar as Sugar<T> as Sugar<T> & { mounted: true });
+        });
+      }
+    },
     use:
       <U extends SugarObject>(options: SugarUserReshaper<T, U>) => useSugar<T, U>(sugar, options),
     useFromRef:

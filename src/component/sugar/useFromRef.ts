@@ -26,7 +26,6 @@ export function useSugarFromRef<T>(
   };
 
   const updateSugar = sugar  as Sugar<T> & { mounted: true };
-
   updateSugar.get = (): SugarValue<T> =>
     param.get() ?? { success: true, value: defaultValue.current ?? sugar.template };
   updateSugar.set = (v): void => {
@@ -43,6 +42,7 @@ export function useSugarFromRef<T>(
     updateSugar.mounted = true;
     updateSugar.isDirty = false;
     updateSugar.setTemplate(sugar.template);
+    updateSugar.upstream.fire('mounted', {});
   }
 
   return {
