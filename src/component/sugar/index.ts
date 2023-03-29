@@ -2,7 +2,7 @@
 import type { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
 import type { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
-import type { MutableRefObject } from 'react';
+import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 
 export type SetTemplateMode = 'replace' | 'merge';
 export type Sugar<T> = SugarData<T> & ({
@@ -25,6 +25,8 @@ export interface SugarData<T> {
     onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
   },
   use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
+  useStateFollower:
+    (state: T, setState: Dispatch<SetStateAction<T>>, comparator?: (a: T, b: T) => boolean) => void,
   useObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
   useArray: T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never;
 }
