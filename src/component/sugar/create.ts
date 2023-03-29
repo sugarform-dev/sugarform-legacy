@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from 'react';
 import type { Sugar, SugarArrayNode, SugarArrayUser, SugarObjectNode, SugarUser, SugarUserReshaper, SugarValue } from '.';
 import { SugarFormError } from '../../util/error';
 import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
@@ -5,6 +6,7 @@ import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
 import { isSugarObject } from '../../util/object';
 import { useArray } from './array';
+import { useStateFollower } from './state';
 import { useSugar } from './use';
 import { useSugarFromRef } from './useFromRef';
 
@@ -26,6 +28,12 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
     },
     use:
       <U extends SugarObject>(options: SugarUserReshaper<T, U>) => useSugar<T, U>(sugar, options),
+    useStateFollower:
+      (
+        state: T,
+        setState: Dispatch<SetStateAction<T>>,
+        comparator?: (a: T, b: T) => boolean,
+      ) => useStateFollower(sugar, state, setState, comparator),
     useFromRef:
       (param: { get: () => SugarValue<T>, set: (value: T) => void }) =>
         useSugarFromRef(sugar, param),
