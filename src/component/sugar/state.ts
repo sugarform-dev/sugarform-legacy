@@ -18,10 +18,7 @@ export function useStateFollower<T>(
   const mountedSugar = sugar as Sugar<T> & { mounted: true };
 
   if (sugar.mounted) {
-    const oldValue = sugar.get();
-    if (oldValue.success && !comparator(fixedState, oldValue.value)) {
-      setDirty(sugar, comparator(sugar.template, fixedState));
-    }
+    setDirty(sugar, !comparator(sugar.template, fixedState));
   }
 
   mountedSugar.get = (): SugarValue<T> => ({ success: true, value: fixedState });
