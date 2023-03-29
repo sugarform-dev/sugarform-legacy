@@ -17,7 +17,7 @@ export function useStateFollower<T>(
   const fixedState = isSugarObject(state) ? { ...state } : state;
   const mountedSugar = sugar as Sugar<T> & { mounted: true };
 
-  if (sugar.mounted) {
+  if (mountedRef.current && sugar.mounted) {
     setDirty(sugar, !comparator(sugar.template, fixedState));
   }
 
