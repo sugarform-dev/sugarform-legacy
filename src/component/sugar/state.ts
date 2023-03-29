@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { SugarValue } from '.';
 import type { Sugar } from '../..';
+import { isSugarObject } from '../../util/object';
 import { setDirty } from './dirty';
 
 export function useStateFollower<T>(
@@ -10,7 +11,7 @@ export function useStateFollower<T>(
   comparator: (a: T, b: T) => boolean = (a, b): boolean => a === b,
 ): void {
 
-  const fixedState = { ...state };
+  const fixedState = isSugarObject(state) ? { ...state } : state;
   const mountedSugar = sugar as Sugar<T> & { mounted: true };
 
   if (sugar.mounted) {
