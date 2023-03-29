@@ -16,9 +16,8 @@ export function useStateFollower<T>(
 
   if (sugar.mounted) {
     const oldValue = sugar.get();
-    if (oldValue.success) {
-      const isDirty = !comparator(fixedState, oldValue.value);
-      setDirty(sugar, isDirty);
+    if (oldValue.success && !comparator(fixedState, oldValue.value)) {
+      setDirty(sugar, comparator(sugar.template, fixedState));
     }
   }
 
