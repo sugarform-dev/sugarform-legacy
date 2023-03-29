@@ -25,7 +25,7 @@ export function useStateFollower<T>(
   mountedSugar.set = (value: T): void => setState(value);
   mountedSugar.setTemplate = (template: T): void => {
     sugar.template = template;
-    setState(template);
+    setTimeout(() => setState(template), 0);
   };
 
   if (!sugar.mounted) {
