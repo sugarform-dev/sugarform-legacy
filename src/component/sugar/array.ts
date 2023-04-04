@@ -100,7 +100,7 @@ export function useArray<T>(
     sugar.template = template;
     const keys = template.map(v => {
       const id = newId();
-      getManagedSugar(id, options.template).asMounted(s => s.setTemplate(v, mode));
+      getManagedSugar(id, mode === 'merge' ? { ...options.template, ...v } : v);
       return id;
     });
     setKeys(keys);
