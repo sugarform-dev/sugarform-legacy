@@ -11,6 +11,7 @@ export function useArray<T>(
 ): SugarArrayNode<T> {
   const newId = useCountingId();
   const mountedRef = useRef(false);
+  const keysRef = useRef<string[]>([]);
 
   const managedSugars = useRef<Array<{ id: string, sugar: Sugar<T> }>>([]);
   let defaultKeys: string[] = [];
@@ -22,7 +23,7 @@ export function useArray<T>(
       const newSugar = createEmptySugar(sugar.path, template);
       managedSugars.current.push({ id, sugar: newSugar });
       newSugar.upstream.listen('updateDirty', ({ isDirty }) => {
-        if (!keys.includes(id)) return;
+        if (!keysRef.current.includes(id)) return;
         dirtyControl({ isDirty });
       });
       return newSugar;
@@ -34,8 +35,8 @@ export function useArray<T>(
     sugar.asMounted(sugar => {
       notDirtyCheck:
       if (!isDirty) {
-        if (keys.length !== sugar.template.length) break notDirtyCheck;
-        if (keys.some(i => {
+        if (keysRef.current.length !== sugar.template.length) break notDirtyCheck;
+        if (keysRef.current.some(i => {
           const managed = getManagedSugar(i);
           return managed.mounted && managed.isDirty;
         })) return;
@@ -43,6 +44,7 @@ export function useArray<T>(
       setDirty(sugar, isDirty);
     });
   };
+
   if (!mountedRef.current && sugar.mounted) {
     debug('WARN', `Sugar is already mounted, but items are not initialized. Remounting... Path: ${sugar.path}`);
     mountedRef.current = false;
@@ -65,6 +67,7 @@ export function useArray<T>(
   }
 
   const [ keys, setKeys ] = useState<string[]>(defaultKeys);
+  keysRef.current = keys;
 
   const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
   mountedSugar.get = (): SugarValue<T[]> => {
@@ -86,8 +89,8 @@ export function useArray<T>(
     const keys = value.map((v, i) => {
       const id = newId();
       const managed = getManagedSugar(id, sugar.template[i] ?? options.template);
-      managed.upstream.listenOnce('mounted', () => {
-        ( managed as Sugar<T> & { mounted: true } ).set(v);
+      managed.asMounted(s => {
+        setTimeout(() => s.set(v));
       });
       return id;
     });
@@ -95,15 +98,26 @@ export function useArray<T>(
   };
   mountedSugar.setTemplate = (template: T[], mode: SetTemplateMode = 'merge'): void => {
     sugar.template = template;
-    keys.forEach((id, i) => {
-      const managed = getManagedSugar(id);
-      if (!managed.mounted) {
-        debug('WARN', `Sugar is not mounted when tried to set. Path: ${managed.path}`);
-        return;
-      }
-      managed.setTemplate(template[i] ?? options.template, mode);
+    const keys = template.map(v => {
+      const id = newId();
+      getManagedSugar(id, options.template).asMounted(s => s.setTemplate(v, mode));
+      return id;
     });
+    setKeys(keys);
   };
+
+  // refresh dirty for new items or removed items
+  setDirty(
+    sugar,
+    ((): boolean => {
+      if (keysRef.current.length !== sugar.template.length) return true;
+      if (keysRef.current.some(i => {
+        const managed = getManagedSugar(i);
+        return managed.mounted && managed.isDirty;
+      })) return true;
+      return false;
+    })(),
+  );
 
   return {
     useNewId: () => newId(),
