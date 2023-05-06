@@ -1,11 +1,11 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
-import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '.';
-import { SugarFormError } from '../../util/error';
-import { debug } from '../../util/logger';
-import type { BetterObjectConstructor, SugarObject } from '../../util/object';
-import { createEmptySugar } from './create';
-import { setDirty } from './dirty';
+import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '..';
+import { SugarFormError } from '../../../util/error';
+import { debug } from '../../../util/logger';
+import type { BetterObjectConstructor, SugarObject } from '../../../util/object';
+import { createEmptySugar } from '../create';
+import { setDirty } from '../dirty';
 
 declare const Object: BetterObjectConstructor;
 
