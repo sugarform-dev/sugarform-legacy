@@ -26,8 +26,6 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
         });
       }
     },
-    maple:
-      <U extends SugarObject>(options: SugarUserReshaper<T, U>) => useSugar<T, U>(sugar, options),
     useStateFollower:
       (
         state: T,
@@ -37,6 +35,8 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
     useFromRef:
       (param: { get: () => SugarValue<T>, set: (value: T) => void }) =>
         useSugarFromRef(sugar, param),
+    maple:
+      <U extends SugarObject>(options: SugarUserReshaper<T, U>) => useSugar<T, U>(sugar, options),
     mapleObject: (
       isSugarObject(template) ?
         (options: SugarUser<SugarObject> = {}): SugarObjectNode<SugarObject> =>
