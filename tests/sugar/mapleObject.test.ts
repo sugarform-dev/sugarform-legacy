@@ -13,7 +13,7 @@ jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
 
 // eslint-disable-next-line max-lines-per-function
-describe('sugar.useObject', () => {
+describe('sugar.mapleObject', () => {
   it('should work normal render', () => {
 
     const { sugar, useIsDirtyState, render } = renderHookResult(() => useSugarForm<Person>({
@@ -23,7 +23,7 @@ describe('sugar.useObject', () => {
       },
     })).current;
 
-    const { fields } = renderHookResult(() => sugar.useObject({})).current;
+    const { fields } = renderHookResult(() => sugar.mapleObject({})).current;
     const isDirty = renderHookResult(() => useIsDirtyState());
     const name = new TextBoxMock(fields.name);
     const age = new TextBoxMock(fields.age);
@@ -67,7 +67,7 @@ describe('sugar.useObject', () => {
       },
     })).current;
 
-    const { fields } = renderHookResult(() => sugar.useObject({})).current;
+    const { fields } = renderHookResult(() => sugar.mapleObject({})).current;
     const isDirty = renderHookResult(() => useIsDirtyState());
     const name = new TextBoxMock(fields.name);
     const age = new TextBoxMock(fields.age);

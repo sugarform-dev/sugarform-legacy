@@ -5,7 +5,7 @@ import { useSugarForm } from '../../src';
 import { renderHookResult, TextBoxMock } from '../misc';
 
 // eslint-disable-next-line max-lines-per-function
-describe('sugar.useArray', () => {
+describe('sugar.mapleArray', () => {
   beforeEach(() => {
     cleanup();
   });
@@ -33,15 +33,15 @@ function componentMock(sugar: Sugar<string[]>): {
   keys: string[];
   setKeys: (newKeys: string[]) => void;
   sugars: TextBoxMock[];
-  useNewId: () => string;
+  generateId: () => string;
   items: Array<{ id: string, sugar: Sugar<string> }>;
 } {
-  const { useKeys, items, useNewId } = renderHookResult(() => sugar.useArray({
+  const { useKeys, items, generateId } = renderHookResult(() => sugar.mapleArray({
     template: 'foo',
   })).current;
   const [ keys, setKeys ] = renderHookResult(() => useKeys()).current;
 
   const sugars = items.map(v => new TextBoxMock(v.sugar));
   act(() => sugars.forEach(v => v.mount()));
-  return { keys, setKeys, sugars, useNewId, items };
+  return { keys, setKeys, sugars, generateId, items };
 }

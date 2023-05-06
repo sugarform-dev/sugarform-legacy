@@ -1,9 +1,9 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
-import type { Sugar, SugarValue } from '.';
-import { setDirty } from './dirty';
+import type { Sugar, SugarValue } from '..';
+import { setDirty } from '../dirty';
 
-export function useSugarFromRef<T>(
+export function syncRef<T>(
   sugar: Sugar<T>, param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean },
 ): {
   onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,

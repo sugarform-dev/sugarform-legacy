@@ -21,14 +21,14 @@ export interface SugarData<T> {
   upstream: SugarUpstreamEventEmitter,
   downstream: SugarDownstreamEventEmitter,
   asMounted: (consumer: (mountedSugar: Sugar<T> & { mounted: true }) => void) => void,
-  useFromRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
+  syncRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
     onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
   },
-  use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
-  useStateFollower:
+  syncState:
     (state: T, setState: Dispatch<SetStateAction<T>>, comparator?: (a: T, b: T) => boolean) => void,
-  useObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
-  useArray: T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never;
+  maple: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
+  mapleObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
+  mapleArray: T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never;
 }
 
 export type SugarValue<T> = {
@@ -59,7 +59,7 @@ export interface SugarArrayUser<T> {
 }
 
 export interface SugarArrayNode<T> {
-  useNewId: () => string,
+  generateId: () => string,
   useKeys: () => [string[], (newKeys: string[]) => void],
   items: Array<{ id: string, sugar: Sugar<T> }>,
 }

@@ -1,11 +1,11 @@
 import { useId, useRef, useState } from 'react';
-import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '.';
-import { debug } from '../../util/logger';
-import { createEmptySugar } from './create';
-import { setDirty } from './dirty';
+import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '..';
+import { debug } from '../../../util/logger';
+import { createEmptySugar } from '../create';
+import { setDirty } from '../dirty';
 
 // eslint-disable-next-line max-lines-per-function
-export function useArray<T>(
+export function mapleArray<T>(
   sugar: Sugar<T[]>,
   options: SugarArrayUser<T>,
 ): SugarArrayNode<T> {
@@ -120,7 +120,7 @@ export function useArray<T>(
   );
 
   return {
-    useNewId: () => newId(),
+    generateId: () => newId(),
     useKeys: () => [ keys, (keys: string[]):void => setKeys(keys) ],
     items: keys.map(id => ({ id, sugar: getManagedSugar(id) })),
   };

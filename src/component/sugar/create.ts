@@ -5,10 +5,10 @@ import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
 import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
 import { isSugarObject } from '../../util/object';
-import { useArray } from './array';
-import { useStateFollower } from './state';
-import { useSugar } from './use';
-import { useSugarFromRef } from './useFromRef';
+import {  mapleArray } from './maple/array';
+import { syncState } from './sync/state';
+import { syncRef } from './sync/ref';
+import { mapleSugar } from './maple';
 
 export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
   const sugar: Sugar<T> = {
@@ -26,21 +26,21 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
         });
       }
     },
-    use:
-      <U extends SugarObject>(options: SugarUserReshaper<T, U>) => useSugar<T, U>(sugar, options),
-    useStateFollower:
+    syncState:
       (
         state: T,
         setState: Dispatch<SetStateAction<T>>,
         comparator?: (a: T, b: T) => boolean,
-      ) => useStateFollower(sugar, state, setState, comparator),
-    useFromRef:
+      ) => syncState(sugar, state, setState, comparator),
+    syncRef:
       (param: { get: () => SugarValue<T>, set: (value: T) => void }) =>
-        useSugarFromRef(sugar, param),
-    useObject: (
+        syncRef(sugar, param),
+    maple:
+      <U extends SugarObject>(options: SugarUserReshaper<T, U>) => mapleSugar<T, U>(sugar, options),
+    mapleObject: (
       isSugarObject(template) ?
         (options: SugarUser<SugarObject> = {}): SugarObjectNode<SugarObject> =>
-          useSugar<SugarObject, SugarObject>(
+          mapleSugar<SugarObject, SugarObject>(
           sugar as Sugar<SugarObject>,
           {
             ...options,
@@ -50,14 +50,14 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
             },
           } as SugarUserReshaper<SugarObject, SugarObject>,
           )
-        : neverFunction(path, 'useObject')
+        : neverFunction(path, 'mapleObject')
     ) as T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never,
-    useArray: (
+    mapleArray: (
       Array.isArray(template) ? (
         (
           options: SugarArrayUser<T>,
-        ): SugarArrayNode<T> => useArray(sugar, options))
-        : neverFunction(path, 'useArray')
+        ): SugarArrayNode<T> => mapleArray(sugar, options))
+        : neverFunction(path, 'mapleArray')
     ) as T extends Array<infer U> ? (options?: SugarArrayUser<T>) => SugarArrayNode<U> : never,
   };
 
