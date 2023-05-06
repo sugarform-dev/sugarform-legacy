@@ -7,7 +7,7 @@ import type { SugarObject } from '../../util/object';
 import { isSugarObject } from '../../util/object';
 import { useArray } from './array';
 import { useStateFollower } from './state';
-import { useSugar } from './use';
+import { mapleSugar } from './maple';
 import { useSugarFromRef } from './useFromRef';
 
 export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
@@ -36,11 +36,11 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
       (param: { get: () => SugarValue<T>, set: (value: T) => void }) =>
         useSugarFromRef(sugar, param),
     maple:
-      <U extends SugarObject>(options: SugarUserReshaper<T, U>) => useSugar<T, U>(sugar, options),
+      <U extends SugarObject>(options: SugarUserReshaper<T, U>) => mapleSugar<T, U>(sugar, options),
     mapleObject: (
       isSugarObject(template) ?
         (options: SugarUser<SugarObject> = {}): SugarObjectNode<SugarObject> =>
-          useSugar<SugarObject, SugarObject>(
+          mapleSugar<SugarObject, SugarObject>(
           sugar as Sugar<SugarObject>,
           {
             ...options,

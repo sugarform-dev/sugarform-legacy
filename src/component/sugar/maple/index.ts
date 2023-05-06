@@ -9,7 +9,7 @@ import { setDirty } from './dirty';
 
 declare const Object: BetterObjectConstructor;
 
-export function useSugar<T, U extends SugarObject>(
+export function mapleSugar<T, U extends SugarObject>(
   sugar: Sugar<T>,
   options: SugarUserReshaper<T, U>,
 ): SugarObjectNode<U> {
