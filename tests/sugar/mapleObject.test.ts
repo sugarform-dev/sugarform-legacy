@@ -13,7 +13,7 @@ jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
 
 // eslint-disable-next-line max-lines-per-function
-describe('sugar.useObject', () => {
+describe('sugar.mapleObject', () => {
   it('should work normal render', () => {
 
     const { sugar, useIsDirtyState, render } = renderHookResult(() => useSugarForm<Person>({

@@ -50,14 +50,14 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
             },
           } as SugarUserReshaper<SugarObject, SugarObject>,
           )
-        : neverFunction(path, 'useObject')
+        : neverFunction(path, 'mapleObject')
     ) as T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never,
     mapleArray: (
       Array.isArray(template) ? (
         (
           options: SugarArrayUser<T>,
         ): SugarArrayNode<T> => mapleArray(sugar, options))
-        : neverFunction(path, 'useArray')
+        : neverFunction(path, 'mapleArray')
     ) as T extends Array<infer U> ? (options?: SugarArrayUser<T>) => SugarArrayNode<U> : never,
   };
 

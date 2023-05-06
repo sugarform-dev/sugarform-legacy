@@ -5,7 +5,7 @@ import { useSugarForm } from '../../src';
 import { renderHookResult, TextBoxMock } from '../misc';
 
 // eslint-disable-next-line max-lines-per-function
-describe('sugar.useArray', () => {
+describe('sugar.mapleArray', () => {
   beforeEach(() => {
     cleanup();
   });
