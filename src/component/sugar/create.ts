@@ -5,7 +5,7 @@ import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
 import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
 import { isSugarObject } from '../../util/object';
-import { useArray } from './array';
+import { mapleArray } from './maple/array';
 import { useStateFollower } from './state';
 import { mapleSugar } from './maple';
 import { useSugarFromRef } from './useFromRef';
@@ -56,7 +56,7 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
       Array.isArray(template) ? (
         (
           options: SugarArrayUser<T>,
-        ): SugarArrayNode<T> => useArray(sugar, options))
+        ): SugarArrayNode<T> => mapleArray(sugar, options))
         : neverFunction(path, 'useArray')
     ) as T extends Array<infer U> ? (options?: SugarArrayUser<T>) => SugarArrayNode<U> : never,
   };
