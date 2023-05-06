@@ -23,7 +23,7 @@ describe('sugar.useObject', () => {
       },
     })).current;
 
-    const { fields } = renderHookResult(() => sugar.useObject({})).current;
+    const { fields } = renderHookResult(() => sugar.mapleObject({})).current;
     const isDirty = renderHookResult(() => useIsDirtyState());
     const name = new TextBoxMock(fields.name);
     const age = new TextBoxMock(fields.age);
@@ -67,7 +67,7 @@ describe('sugar.useObject', () => {
       },
     })).current;
 
-    const { fields } = renderHookResult(() => sugar.useObject({})).current;
+    const { fields } = renderHookResult(() => sugar.mapleObject({})).current;
     const isDirty = renderHookResult(() => useIsDirtyState());
     const name = new TextBoxMock(fields.name);
     const age = new TextBoxMock(fields.age);

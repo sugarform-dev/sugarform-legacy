@@ -24,11 +24,11 @@ export interface SugarData<T> {
   useFromRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
     onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
   },
-  use: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
   useStateFollower:
     (state: T, setState: Dispatch<SetStateAction<T>>, comparator?: (a: T, b: T) => boolean) => void,
-  useObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
-  useArray: T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never;
+  maple: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
+  mapleObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;
+  mapleArray: T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never;
 }
 
 export type SugarValue<T> = {

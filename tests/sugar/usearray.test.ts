@@ -36,7 +36,7 @@ function componentMock(sugar: Sugar<string[]>): {
   useNewId: () => string;
   items: Array<{ id: string, sugar: Sugar<string> }>;
 } {
-  const { useKeys, items, useNewId } = renderHookResult(() => sugar.useArray({
+  const { useKeys, items, useNewId } = renderHookResult(() => sugar.mapleArray({
     template: 'foo',
   })).current;
   const [ keys, setKeys ] = renderHookResult(() => useKeys()).current;
