@@ -120,7 +120,7 @@ export function mapleArray<T>(
   );
 
   return {
-    useNewId: () => newId(),
+    generateId: () => newId(),
     useKeys: () => [ keys, (keys: string[]):void => setKeys(keys) ],
     items: keys.map(id => ({ id, sugar: getManagedSugar(id) })),
   };

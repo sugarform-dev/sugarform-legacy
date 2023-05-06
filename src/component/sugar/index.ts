@@ -59,7 +59,7 @@ export interface SugarArrayUser<T> {
 }
 
 export interface SugarArrayNode<T> {
-  useNewId: () => string,
+  generateId: () => string,
   useKeys: () => [string[], (newKeys: string[]) => void],
   items: Array<{ id: string, sugar: Sugar<T> }>,
 }
