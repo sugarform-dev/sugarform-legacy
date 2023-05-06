@@ -21,10 +21,10 @@ export interface SugarData<T> {
   upstream: SugarUpstreamEventEmitter,
   downstream: SugarDownstreamEventEmitter,
   asMounted: (consumer: (mountedSugar: Sugar<T> & { mounted: true }) => void) => void,
-  useFromRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
+  syncRef: (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) => {
     onChange: () => void, onBlur: () => void, defaultValueRef: MutableRefObject<T | undefined>,
   },
-  useStateFollower:
+  syncState:
     (state: T, setState: Dispatch<SetStateAction<T>>, comparator?: (a: T, b: T) => boolean) => void,
   maple: <U extends SugarObject>(options: SugarUserReshaper<T, U>) => SugarObjectNode<U>,
   mapleObject: T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never;

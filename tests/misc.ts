@@ -22,7 +22,7 @@ export class TextBoxMock {
   }
 
   constructor(public sugar: Sugar<string>) {
-    const { current: result } = renderHookResult(() => sugar.useFromRef({
+    const { current: result } = renderHookResult(() => sugar.syncRef({
       get: () => this.mounted ? { success: true, value: this.value } : undefined,
       set: (newValue) => {
         if (!this.mounted) {
