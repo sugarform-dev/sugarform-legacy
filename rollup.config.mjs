@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-restricted-exports */
 import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
@@ -29,7 +30,11 @@ export default [
         sourceMaps: false,
       })),
       minify(defineRollupSwcMinifyOption({
-        compress: true,
+        compress: {
+          arguments: true,
+          hoist_funs: true,
+          unsafe: true,
+        },
         mangle: true,
       })),
     ],
