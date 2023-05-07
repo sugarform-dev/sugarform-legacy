@@ -1,5 +1,5 @@
 import { describe, it } from '@jest/globals';
-import { SugarEventEmitter } from '@/util/event';
+import { SugarEventEmitter } from '@util/event';
 
 class TestEventEmitter extends SugarEventEmitter<{
   test: { a: number, b: number },
