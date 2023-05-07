@@ -8,7 +8,7 @@ import {  mapleArray } from './maple/array';
 import { syncState } from './sync/state';
 import { syncRef } from './sync/ref';
 import { mapleSugar } from './maple';
-import { SugarFormCalledUnavailableFunctionError } from '../../util/error';
+import { SugarFormUnavailableFunctionError } from '../../util/error';
 
 export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
   const sugar: Sugar<T> = {
@@ -66,6 +66,6 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
 
 function unavailable(path: string, name: string): never {
   return ((): void => {
-    throw new SugarFormCalledUnavailableFunctionError(path, name);
+    throw new SugarFormUnavailableFunctionError(path, name);
   }) as unknown as never;
 }

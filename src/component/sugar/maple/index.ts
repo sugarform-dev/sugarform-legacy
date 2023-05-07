@@ -1,7 +1,7 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '..';
-import { SugarFormError } from '../../../util/error';
+import { SugarFormUnmountedSugarError } from '../../../util/error';
 import { debug } from '../../../util/logger';
 import type { BetterObjectConstructor, SugarObject } from '../../../util/object';
 import { createEmptySugar } from '../create';
@@ -48,7 +48,7 @@ export function mountSugar<T, U extends SugarObject>(
 
   const getter = (): SugarValue<T> => {
     const fields = fieldsRef.current;
-    if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}`);
+    if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     const value = get<U>(fields);
     debug('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}, Path: ${sugar.path}`);
     if (!value.success) return value;
@@ -72,13 +72,13 @@ export function mountSugar<T, U extends SugarObject>(
   const setter = (value: T): void => {
     debug('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
     const fields = fieldsRef.current;
-    if (fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}`);
+    if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     set<U>(fields, options.reshape.deform(value), { type: 'value' });
   };
 
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
     const fields = fieldsRef.current;
-    if (!sugar.mounted || fields === undefined) throw new SugarFormError('SF0021', `Path: ${sugar.path}`);
+    if (!sugar.mounted || fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     if (!isDirty && Object.values(fields).some(s => s.mounted && s.isDirty)) return;
     setDirty(sugar, isDirty);
   };

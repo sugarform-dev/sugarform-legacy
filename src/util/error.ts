@@ -20,7 +20,7 @@ export class SugarFormError extends Error {
 
 }
 
-export class SugarFormCalledUnavailableFunctionError extends SugarFormError {
+export class SugarFormUnavailableFunctionError extends SugarFormError {
 
   constructor(path: string, name: string) {
     super(
@@ -32,4 +32,16 @@ export class SugarFormCalledUnavailableFunctionError extends SugarFormError {
     );
   }
 
+}
+
+export class SugarFormUnmountedSugarError extends SugarFormError {
+  constructor(path: string) {
+    super(
+      [
+        `Cannot get the value of unmounted sugar "${path}".`,
+        'If this error occurs even though the value was obtained after it was mounted, it is possible that the value was forced to be unmounted externally.',
+      ].join('\n'),
+      null,
+    );
+  }
 }
