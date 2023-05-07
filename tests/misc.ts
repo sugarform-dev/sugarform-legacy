@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import type { MutableRefObject } from 'react';
-import type { Sugar } from '../src';
+import type { Sugar } from '@';
 export const renderHookResult = <T,>(hook: () => T): { current: T } => renderHook(hook).result;
 
 export class TextBoxMock {

@@ -1,10 +1,9 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useRef } from 'react';
-import type { SugarValue } from '..';
-import type { Sugar } from '../../..';
-import { debug } from '../../../util/logger';
-import { isSugarObject } from '../../../util/object';
-import { setDirty } from '../dirty';
+import type { SugarValue , Sugar } from '@component/sugar';
+import { debug } from '@util/logger';
+import { isSugarObject } from '@util/object';
+import { setDirty } from '@component/sugar/dirty';
 
 export function syncState<T>(
   sugar: Sugar<T>,

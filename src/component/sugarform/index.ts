@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useRef, useState } from 'react';
-import { SugarFormUnmountedSugarError } from '../../util/error';
-import type { Sugar, SugarValue } from '../sugar';
-import { createEmptySugar } from '../sugar/create';
+import { SugarFormUnmountedSugarError } from '@util/error';
+import type { Sugar, SugarValue } from '@component/sugar';
+import { createEmptySugar } from '@component/sugar/create';
 
 export const useSugarForm = <T,>({ defaultValue }:{ defaultValue: T }): {
   sugar: Sugar<T>,

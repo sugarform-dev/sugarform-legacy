@@ -1,4 +1,4 @@
-import { isSugarObject } from '../src/util/object';
+import { isSugarObject } from '@util/object';
 import { describe, it } from '@jest/globals';
 
 describe('object/isSugarObject', () => {
