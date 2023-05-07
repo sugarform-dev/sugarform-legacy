@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-exports */
 import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
+import tsConfigPaths from 'rollup-plugin-tsconfig-paths';
 import { swc, defineRollupSwcOption, minify, defineRollupSwcMinifyOption } from 'rollup-plugin-swc3';
 import packageJson from './package.json' assert { type: 'json' };
 
@@ -37,11 +38,11 @@ export default [
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/cjs/index.d.ts', format: 'cjs' }],
-    plugins: [ dts() ],
+    plugins: [ tsConfigPaths(), dts() ],
   },
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/esm/index.d.ts', format: 'esm' }],
-    plugins: [ dts() ],
+    plugins: [ tsConfigPaths(), dts() ],
   },
 ];
