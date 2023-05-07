@@ -33,7 +33,6 @@ export default [
         compress: {
           arguments: true,
           hoist_funs: true,
-          unsafe: true,
         },
         mangle: true,
       })),
