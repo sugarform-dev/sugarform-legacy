@@ -30,11 +30,8 @@ export default [
         sourceMaps: false,
       })),
       minify(defineRollupSwcMinifyOption({
-        compress: {
-          arguments: true,
-          hoist_funs: true,
-        },
-        mangle: true,
+        compress: {},
+        mangle: {},
       })),
     ],
     external: [ 'react', 'react-dom' ],
