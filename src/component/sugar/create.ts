@@ -1,14 +1,14 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { Sugar, SugarArrayNode, SugarArrayUser, SugarObjectNode, SugarUser, SugarUserReshaper, SugarValue } from '.';
-import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
-import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
-import type { SugarObject } from '../../util/object';
-import { isSugarObject } from '../../util/object';
-import {  mapleArray } from './maple/array';
+import { SugarDownstreamEventEmitter } from '@util/events/downstreamEvent';
+import { SugarUpstreamEventEmitter } from '@util/events/upstreamEvent';
+import type { SugarObject } from '@util/object';
+import { isSugarObject } from '@util/object';
+import { mapleArray } from './maple/array';
 import { syncState } from './sync/state';
 import { syncRef } from './sync/ref';
 import { mapleSugar } from './maple';
-import { SugarFormUnavailableFunctionError } from '../../util/error';
+import { SugarFormUnavailableFunctionError } from '@util/error';
 
 export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
   const sugar: Sugar<T> = {

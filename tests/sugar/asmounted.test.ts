@@ -1,6 +1,6 @@
 import { describe, it } from '@jest/globals';
-import { createEmptySugar } from '../../src/component/sugar/create';
-import { TextBoxMock } from '../misc';
+import { createEmptySugar } from '@component/sugar/create';
+import { TextBoxMock } from '#/misc';
 
 describe('sugar.asMounted', () => {
   it('should call instantly if mounted', () => {

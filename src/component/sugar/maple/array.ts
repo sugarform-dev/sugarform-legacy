@@ -1,8 +1,8 @@
 import { useId, useRef, useState } from 'react';
-import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '..';
-import { debug } from '../../../util/logger';
-import { createEmptySugar } from '../create';
-import { setDirty } from '../dirty';
+import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '@component/sugar';
+import { debug } from '@util/logger';
+import { createEmptySugar } from '@component/sugar/create';
+import { setDirty } from '@component/sugar/dirty';
 
 // eslint-disable-next-line max-lines-per-function
 export function mapleArray<T>(

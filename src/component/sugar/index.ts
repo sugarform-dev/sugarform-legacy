@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import type { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
-import type { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
-import type { SugarObject } from '../../util/object';
+import type { SugarDownstreamEventEmitter } from '@util/events/downstreamEvent';
+import type { SugarUpstreamEventEmitter } from '@util/events/upstreamEvent';
+import type { SugarObject } from '@util/object';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 
 export type SetTemplateMode = 'replace' | 'merge';

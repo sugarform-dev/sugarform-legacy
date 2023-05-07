@@ -1,7 +1,7 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarValue } from '..';
-import { setDirty } from '../dirty';
+import { setDirty } from '@component/sugar/dirty';
 
 export function syncRef<T>(
   sugar: Sugar<T>, param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean },

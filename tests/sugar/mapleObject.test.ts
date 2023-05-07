@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { describe, it } from '@jest/globals';
 import { act } from '@testing-library/react';
-import { useSugarForm } from '../../src';
-import { renderHookResult, TextBoxMock } from '../misc';
+import { useSugarForm } from '@';
+import { renderHookResult, TextBoxMock } from '#/misc';
 
 type Person = {
   name: string;

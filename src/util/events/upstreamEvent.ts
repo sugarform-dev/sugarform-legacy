@@ -1,4 +1,4 @@
-import { SugarEventEmitter } from '../event';
+import { SugarEventEmitter } from '@util/event';
 
 export class SugarUpstreamEventEmitter extends SugarEventEmitter<{
   updateDirty: { isDirty: boolean },

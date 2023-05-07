@@ -1,4 +1,4 @@
-import { debug, setSugarFormLogLevel } from '../src/util/logger';
+import { debug, setSugarFormLogLevel } from '@util/logger';
 import { describe, it } from '@jest/globals';
 
 describe('logger', () => {

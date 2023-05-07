@@ -1,8 +1,8 @@
 import { describe, it, beforeEach } from '@jest/globals';
 import { act, cleanup } from '@testing-library/react';
-import type { Sugar } from '../../src';
-import { useSugarForm } from '../../src';
-import { renderHookResult, TextBoxMock } from '../misc';
+import type { Sugar } from '@';
+import { useSugarForm } from '@';
+import { renderHookResult, TextBoxMock } from '#/misc';
 
 // eslint-disable-next-line max-lines-per-function
 describe('sugar.mapleArray', () => {
