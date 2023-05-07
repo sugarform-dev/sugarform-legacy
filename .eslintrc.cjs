@@ -31,6 +31,9 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/resolver': {
+      typescript: {},
+    },
   },
   rules: {
 
@@ -94,6 +97,7 @@ module.exports = {
     '@typescript-eslint/no-require-imports': [ 'error' ],
     'import/consistent-type-specifier-style': [ 'error', 'prefer-top-level' ],
     'import/no-absolute-path': [ 'error' ],
+    'import/no-relative-parent-imports': [ 'error' ],
     'import/no-empty-named-blocks': [ 'error' ],
     'import/no-duplicates': [ 'error' ],
     'import/no-cycle': [ 'error' ],

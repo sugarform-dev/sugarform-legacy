@@ -4,6 +4,13 @@
     "module": "ESNext",
     "outDir": "dist",
     "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@component/*": ["src/component/*"],
+      "@util/*": ["src/util/*"],
+      "@tests/*": ["tests/*"]
+    },
 
     "jsx": "react",
     "sourceMap": true,
