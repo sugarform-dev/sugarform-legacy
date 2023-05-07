@@ -95,9 +95,19 @@ module.exports = {
     'no-restricted-exports': [ 'error', { restrictDefaultExports: { direct: true, defaultFrom: true, namedFrom: true } }],
     '@typescript-eslint/consistent-type-imports': [ 'error', { prefer: 'type-imports', fixStyle: 'separate-type-imports' }],
     '@typescript-eslint/no-require-imports': [ 'error' ],
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: [ '../*' ],
+            message: 'Usage of relative parent imports is not allowed. Use paths instead.',
+          },
+        ],
+      },
+    ],
     'import/consistent-type-specifier-style': [ 'error', 'prefer-top-level' ],
     'import/no-absolute-path': [ 'error' ],
-    'import/no-relative-parent-imports': [ 'error' ],
     'import/no-empty-named-blocks': [ 'error' ],
     'import/no-duplicates': [ 'error' ],
     'import/no-cycle': [ 'error' ],
