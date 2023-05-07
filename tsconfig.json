@@ -6,10 +6,11 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
+      "@": ["src/"],
       "@/*": ["src/*"],
       "@component/*": ["src/component/*"],
       "@util/*": ["src/util/*"],
-      "@tests/*": ["tests/*"]
+      "#/*": ["tests/*"]
     },
 
     "jsx": "react",
