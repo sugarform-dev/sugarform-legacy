@@ -20,3 +20,16 @@ export class SugarFormError extends Error {
 
 }
 
+export class SugarFormCalledUnavailableFunctionError extends SugarFormError {
+
+  constructor(path: string, name: string) {
+    super(
+      [
+        `The sugar property of ${path} is not supposed to call the ${name} function because the type does not satisfy the constraint.`,
+        `Therefore, ${name} is not included in the TypeScript type system, but was called against it for some reason.`,
+      ].join('\n'),
+      null,
+    );
+  }
+
+}

@@ -1,6 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { Sugar, SugarArrayNode, SugarArrayUser, SugarObjectNode, SugarUser, SugarUserReshaper, SugarValue } from '.';
-import { SugarFormError } from '../../util/error';
 import { SugarDownstreamEventEmitter } from '../../util/events/downstreamEvent';
 import { SugarUpstreamEventEmitter } from '../../util/events/upstreamEvent';
 import type { SugarObject } from '../../util/object';
@@ -9,6 +8,7 @@ import {  mapleArray } from './maple/array';
 import { syncState } from './sync/state';
 import { syncRef } from './sync/ref';
 import { mapleSugar } from './maple';
+import { SugarFormCalledUnavailableFunctionError } from '../../util/error';
 
 export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
   const sugar: Sugar<T> = {
@@ -50,24 +50,22 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
               },
             },
           )
-        : neverFunction(path, 'mapleObject')
+        : unavailable(path, 'mapleObject')
     ) as T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never,
     mapleArray: (
       Array.isArray(template) ? (
         (
           options: SugarArrayUser<unknown>,
         ): SugarArrayNode<unknown> => mapleArray(sugar as unknown as Sugar<unknown[]>, options))
-        : neverFunction(path, 'mapleArray')
+        : unavailable(path, 'mapleArray')
     ) as T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never,
   };
 
   return sugar;
 }
 
-export function neverFunction(path: string, name: string): never {
-  const error: never =  ((): void => {
-    throw new SugarFormError('SF0002', `This function should not be called. at ${path} of ${name}`);
+function unavailable(path: string, name: string): never {
+  return ((): void => {
+    throw new SugarFormCalledUnavailableFunctionError(path, name);
   }) as unknown as never;
-
-  return error;
 }
