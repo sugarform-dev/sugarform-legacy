@@ -1021,6 +1021,7 @@ __metadata:
     rollup: ^3.18.0
     rollup-plugin-dts: ^5.2.0
     rollup-plugin-swc3: ^0.8.0
+    rollup-plugin-tsconfig-paths: ^1.5.0
     ts-jest: ^29.1.0
     ts-node: ^10.9.1
     tslib: ^2.5.0
@@ -5795,6 +5796,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup-plugin-tsconfig-paths@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "rollup-plugin-tsconfig-paths@npm:1.5.0"
+  dependencies:
+    typescript-paths: ^1.5.0
+  peerDependencies:
+    rollup: ^2 || ^3
+  checksum: 6189fd946fc1fc6169fd454e7d0046c46990c9c05653a5709897063d73dfdcb2015c9e710d027869f90b38fc53e13ce65889c67faed24a3cbc084d57c4854445
+  languageName: node
+  linkType: hard
+
 "rollup@npm:^3.18.0":
   version: 3.18.0
   resolution: "rollup@npm:3.18.0"
@@ -6450,6 +6462,15 @@ __metadata:
     for-each: ^0.3.3
     is-typed-array: ^1.1.9
   checksum: 2228febc93c7feff142b8c96a58d4a0d7623ecde6c7a24b2b98eb3170e99f7c7eff8c114f9b283085cd59dcd2bd43aadf20e25bba4b034a53c5bb292f71f8956
+  languageName: node
+  linkType: hard
+
+"typescript-paths@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "typescript-paths@npm:1.5.0"
+  peerDependencies:
+    typescript: ^4.7.2 || ^5
+  checksum: d953250ef198cc093fecda2f53c8a01618133b8fa9f319c02145ac7275112d19ac1098d55befb38032f1f193bfb6f67ec9b632cd3b78cf5a851f7579255f9dc5
   languageName: node
   linkType: hard
 
