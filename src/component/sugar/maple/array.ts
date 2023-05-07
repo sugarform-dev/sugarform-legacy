@@ -126,7 +126,7 @@ export function mapleArray<T>(
   };
 }
 
-export function useCountingId(): () => string {
+function useCountingId(): () => string {
   const id = useId();
   const counter = useRef(0);
   return () => `${id}#${counter.current++}`;

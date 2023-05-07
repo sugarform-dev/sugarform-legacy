@@ -104,7 +104,7 @@ export function mountSugar<T, U extends SugarObject>(
 }
 
 
-export function wrapSugar<T extends SugarObject>(path: string, template: T): SugarObjectNode<T>['fields'] {
+function wrapSugar<T extends SugarObject>(path: string, template: T): SugarObjectNode<T>['fields'] {
   const fields: SugarObjectNode<T>['fields'] = {} as SugarObjectNode<T>['fields'];
 
   for (const key in template) {
@@ -114,7 +114,7 @@ export function wrapSugar<T extends SugarObject>(path: string, template: T): Sug
   return fields;
 }
 
-export function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields']): SugarValue<T> {
+function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields']): SugarValue<T> {
   const result = {} as { [P in keyof T]: unknown };
   let success = true;
 
@@ -140,7 +140,7 @@ export function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields'])
   };
 }
 
-export function set<T extends SugarObject>(
+function set<T extends SugarObject>(
   fields: SugarObjectNode<T>['fields'],
   value: T,
   type: {
