@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useRef, useState } from 'react';
-import { SugarFormError } from '../../util/error';
+import { SugarFormUnmountedSugarError } from '../../util/error';
 import type { Sugar, SugarValue } from '../sugar';
 import { createEmptySugar } from '../sugar/create';
 
@@ -10,7 +10,7 @@ export const useSugarForm = <T,>({ defaultValue }:{ defaultValue: T }): {
   useIsDirtyState: () => boolean,
 } => {
   const sugar = useRef<Sugar<T>>();
-  sugar.current ??= createEmptySugar('', defaultValue);
+  sugar.current ??= createEmptySugar('ROOT', defaultValue);
 
   const isDirtyStateRef = useRef<undefined | Dispatch<SetStateAction<boolean>>>(undefined);
 
@@ -24,7 +24,7 @@ export const useSugarForm = <T,>({ defaultValue }:{ defaultValue: T }): {
     sugar: sugar.current,
     render: (): SugarValue<T> => {
       const sugarValue = sugar.current;
-      if (sugarValue === undefined || !sugarValue.mounted) throw new SugarFormError('SF0021', 'Path: <TopLevel>');
+      if (sugarValue === undefined || !sugarValue.mounted) throw new SugarFormUnmountedSugarError('ROOT');
       return sugarValue.get();
     },
     useIsDirtyState: (): boolean => {
