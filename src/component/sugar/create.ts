@@ -33,32 +33,32 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
         comparator?: (a: T, b: T) => boolean,
       ) => syncState(sugar, state, setState, comparator),
     syncRef:
-      (param: { get: () => SugarValue<T>, set: (value: T) => void }) =>
+      (param: { get: () => SugarValue<T> | undefined, set: (value: T) => boolean }) =>
         syncRef(sugar, param),
     maple:
       <U extends SugarObject>(options: SugarUserReshaper<T, U>) => mapleSugar<T, U>(sugar, options),
     mapleObject: (
       isSugarObject(template) ?
-        (options: SugarUser<SugarObject> = {}): SugarObjectNode<SugarObject> =>
-          mapleSugar<SugarObject, SugarObject>(
-          sugar as Sugar<SugarObject>,
-          {
-            ...options,
-            reshape: {
-              transform: x => x,
-              deform: x => x,
+        (options: SugarUser<typeof template> = {}): SugarObjectNode<typeof template> =>
+          mapleSugar<typeof template, typeof template>(
+            sugar as Sugar<typeof template>,
+            {
+              ...options,
+              reshape: {
+                transform: x => x,
+                deform: x => x,
+              },
             },
-          } as SugarUserReshaper<SugarObject, SugarObject>,
           )
         : neverFunction(path, 'mapleObject')
     ) as T extends SugarObject ? (options?: SugarUser<T>) => SugarObjectNode<T> : never,
     mapleArray: (
       Array.isArray(template) ? (
         (
-          options: SugarArrayUser<T>,
-        ): SugarArrayNode<T> => mapleArray(sugar, options))
+          options: SugarArrayUser<unknown>,
+        ): SugarArrayNode<unknown> => mapleArray(sugar as unknown as Sugar<unknown[]>, options))
         : neverFunction(path, 'mapleArray')
-    ) as T extends Array<infer U> ? (options?: SugarArrayUser<T>) => SugarArrayNode<U> : never,
+    ) as T extends Array<infer U> ? (options?: SugarArrayUser<U>) => SugarArrayNode<U> : never,
   };
 
   return sugar;
