@@ -39,8 +39,8 @@ module.exports = {
     {
       files: [ '**/*.config.mjs' ],
       rules: {
-        // 'no-restricted-exports': [ 'off' ],
-        // 'camelcase': [ 'off' ],
+        'no-restricted-exports': [ 'off' ],
+        'camelcase': [ 'off' ],
       },
     },
   ],
