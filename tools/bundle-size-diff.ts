@@ -88,7 +88,7 @@ async function main(): Promise<void> {
       console.log('Usage: yarn bundle-size-diff inspect <package-name>');
       process.exit(1);
     }
-    const readPackageContent = (path: string): Promise<Buffer> => readFile(resolve('./packages', packageName, path));
+    const readPackageContent = (path: string): Promise<Buffer> => readFile(resolve('../packages', packageName, path));
     try {
       const cjs = await readPackageContent('./dist/cjs/index.js');
       const esm = await readPackageContent('./dist/esm/index.js');
