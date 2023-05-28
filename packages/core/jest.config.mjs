@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-exports */
-
 import { pathsToModuleNameMapper } from 'ts-jest';
 import tsconfig from './tsconfig.json' assert { type: 'json' };
 

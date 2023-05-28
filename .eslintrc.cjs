@@ -35,6 +35,15 @@ module.exports = {
       typescript: {},
     },
   },
+  overrides: [
+    {
+      files: [ '**/*.config.mjs' ],
+      rules: {
+        'no-restricted-exports': [ 'off' ],
+        'camelcase': [ 'off' ],
+      },
+    },
+  ],
   rules: {
 
     /* Code Styles */

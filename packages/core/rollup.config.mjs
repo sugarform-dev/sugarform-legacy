@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable no-restricted-exports */
 import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
 import { swc, defineRollupSwcOption, minify, defineRollupSwcMinifyOption } from 'rollup-plugin-swc3';

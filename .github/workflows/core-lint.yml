@@ -1,0 +1,32 @@
+name: core-lint
+on: [pull_request]
+
+jobs:
+  eslint:
+    runs-on: [ubuntu-latest]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Restore pr yarn cache
+        uses: actions/cache@v3
+        id: restore-yarn-cache
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-pr-${{ github.event.number }}
+      - name: Restore shared yarn cache
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/restore@v3
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-shared
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: yarn install --immutable
+      - name: Run ESLint
+        run: yarn workspace @sugarform/core lint
