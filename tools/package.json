@@ -6,6 +6,6 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "diff": "ts-node bundle-size-diff.ts"
+    "bundle-size": "ts-node bundle-size-diff.ts"
   }
 }

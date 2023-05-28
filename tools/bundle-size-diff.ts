@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 
 interface Diff {
   head: number;
@@ -82,13 +83,15 @@ async function main(): Promise<void> {
   switch (args[2]) {
   case 'inspect':
     try {
-      const cjs = await readFile('./dist/cjs/index.js');
-      const esm = await readFile('./dist/esm/index.js');
-      const cjsDts = await readFile('./dist/cjs/index.d.ts');
-      const esmDts = await readFile('./dist/esm/index.d.ts');
-      const packageJson = await readFile('./package.json');
-      const license = await readFile('./LICENSE');
-      const readme = await readFile('./README.md');
+      const packageName = args[3];
+      const readPackageContent = (path: string) => readFile(resolve('./packages', packageName, path));
+      const cjs = await readPackageContent('./dist/cjs/index.js');
+      const esm = await readPackageContent('./dist/esm/index.js');
+      const cjsDts = await readPackageContent('./dist/cjs/index.d.ts');
+      const esmDts = await readPackageContent('./dist/esm/index.d.ts');
+      const packageJson = await readPackageContent('./package.json');
+      const license = await readPackageContent('./LICENSE');
+      const readme = await readPackageContent('./README.md');
       console.log([
         cjs.byteLength,
         esm.byteLength,
