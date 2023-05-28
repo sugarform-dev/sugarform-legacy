@@ -88,15 +88,21 @@ async function main(): Promise<void> {
       console.log('Usage: yarn bundle-size-diff inspect <package-name>');
       process.exit(1);
     }
+    const readPackageContent = (path: string): Promise<Buffer> => readFile(resolve('./packages', packageName, path));
     try {
-      const readPackageContent = (path: string): Promise<Buffer> => readFile(resolve('./packages', packageName, path));
       const cjs = await readPackageContent('./dist/cjs/index.js');
       const esm = await readPackageContent('./dist/esm/index.js');
       const cjsDts = await readPackageContent('./dist/cjs/index.d.ts');
       const esmDts = await readPackageContent('./dist/esm/index.d.ts');
       const packageJson = await readPackageContent('./package.json');
-      const license = await readPackageContent('./LICENSE');
-      const readme = await readPackageContent('./README.md');
+      const license = await readPackageContent('./LICENSE').catch(() => {
+        console.warn('Warning: LICENSE not found. skipping...');
+        return Buffer.from('');
+      });
+      const readme = await readPackageContent('./README.md').catch(() => {
+        console.warn('Warning: README.md not found. skipping...');
+        return Buffer.from('');
+      });
       console.log([
         cjs.byteLength,
         esm.byteLength,
