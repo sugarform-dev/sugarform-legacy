@@ -1,8 +1,8 @@
-name: lint
+name: core-lint-reviewdog
 on: [pull_request]
 
 jobs:
-  eslint:
+  eslint-diff-context:
     runs-on: [ubuntu-latest]
     permissions:
       contents: read
@@ -29,9 +29,10 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
       - name: Run ESLint
-        uses: reviewdog/action-eslint@v1
+        uses: reviewdog/action-eslint@v1.18.2
         with:
           github_token: ${{ secrets.github_token }}
+          workdir: packages/core
           reporter: github-pr-review
           filter_mode: diff_context
           fail_on_error: true

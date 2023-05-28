@@ -64,7 +64,7 @@ jobs:
       - name: Export Size Info
         id: export
         run: |
-          echo "HEAD_RESULT=$(yarn workspace @sugarform/tools bundle-size inspect core)" >> $GITHUB_OUTPUT
+          echo "BASE_RESULT=$(yarn workspace @sugarform/tools bundle-size inspect core)" >> $GITHUB_OUTPUT
 
   compare:
     runs-on: [ubuntu-latest]
