@@ -1,7 +1,8 @@
 {
   "name": "@sugarform",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "tools"
   ],
   "repository": "https://github.com/sugarform-dev/sugarform.git",
   "author": "aspulse <aspulse.x@gmail.com>",
