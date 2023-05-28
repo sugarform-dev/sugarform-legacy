@@ -1,4 +1,4 @@
-name: bundle-size
+name: core-bundle-size
 on: [pull_request]
 
 jobs:
