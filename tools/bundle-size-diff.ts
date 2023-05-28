@@ -81,10 +81,15 @@ export function formatSize(byte: number): string {
 async function main(): Promise<void> {
   const args = process.argv;
   switch (args[2]) {
-  case 'inspect':
+  case 'inspect': {
+    const packageName = args[3];
+    if (packageName === undefined) {
+      console.error('Error: package name not specified.');
+      console.log('Usage: yarn bundle-size-diff inspect <package-name>');
+      process.exit(1);
+    }
     try {
-      const packageName = args[3];
-      const readPackageContent = (path: string) => readFile(resolve('./packages', packageName, path));
+      const readPackageContent = (path: string): Promise<Buffer> => readFile(resolve('./packages', packageName, path));
       const cjs = await readPackageContent('./dist/cjs/index.js');
       const esm = await readPackageContent('./dist/esm/index.js');
       const cjsDts = await readPackageContent('./dist/cjs/index.d.ts');
@@ -104,7 +109,7 @@ async function main(): Promise<void> {
       process.exit(1);
     }
     break;
-
+  }
   case 'diff':
     exportToMarkdown(getDiff());
     break;
