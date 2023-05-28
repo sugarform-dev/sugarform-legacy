@@ -2,16 +2,6 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "ESNext",
-    "outDir": "dist",
-    "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "@": ["src/"],
-      "@/*": ["src/*"],
-      "@component/*": ["src/component/*"],
-      "@util/*": ["src/util/*"],
-      "#/*": ["tests/*"]
-    },
 
     "jsx": "react",
     "sourceMap": true,
@@ -35,11 +25,10 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", "tests", "misc", ".eslintrc.cjs", "rollup.config.mjs", "jest.config.mjs"],
-  "exclude": ["node_modules", "dist", "coverage"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"
     }
-  }
+  },
+  "include": [".eslintrc.cjs"]
 }

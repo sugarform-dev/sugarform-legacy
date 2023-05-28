@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@": ["src/"],
+      "@/*": ["src/*"],
+      "@component/*": ["src/component/*"],
+      "@util/*": ["src/util/*"],
+      "#/*": ["tests/*"]
+    }
+  },
+  "include": ["src", "tests", "misc", ".eslintrc.cjs", "rollup.config.mjs", "jest.config.mjs"],
+  "exclude": ["dist", "coverage"]
+}

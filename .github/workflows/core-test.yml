@@ -1,4 +1,4 @@
-name: test
+name: core-test
 on:
   pull_request
 
@@ -30,6 +30,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
       - name: Run Jest
-        run: yarn test --verbose --coverage
+        run: yarn workspace @sugarform/core test --verbose --coverage
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

@@ -1,4 +1,4 @@
-name: bundle-size
+name: core-bundle-size
 on: [pull_request]
 
 jobs:
@@ -30,11 +30,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
       - name: Build
-        run: yarn build
+        run: yarn workspace @sugarform/core build
       - name: Export Size Info
         id: export
         run: |
-          echo "HEAD_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_OUTPUT
+          echo "HEAD_RESULT=$(yarn workspace @sugarform/tools bundle-size inspect core)" >> $GITHUB_OUTPUT
 
   build_base:
     runs-on: [ubuntu-latest]
@@ -60,11 +60,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
       - name: Build
-        run: yarn build
+        run: yarn workspace @sugarform/core build
       - name: Export Size Info
         id: export
         run: |
-          echo "BASE_RESULT=$(yarn ts-node ./misc/bundle-size-diff.ts inspect)" >> $GITHUB_OUTPUT
+          echo "HEAD_RESULT=$(yarn workspace @sugarform/tools bundle-size inspect core)" >> $GITHUB_OUTPUT
 
   compare:
     runs-on: [ubuntu-latest]
@@ -102,7 +102,7 @@ jobs:
           HEAD_RESULT: ${{ needs.build_head.outputs.result }}
           BASE_RESULT: ${{ needs.build_base.outputs.result }}
         with:
-          command: yarn ts-node ./misc/bundle-size-diff.ts diff
+          command: yarn workspace @sugarform/tools bundle-size diff
       - name: Post Review Comment
         uses: thollander/actions-comment-pull-request@v2
         with:

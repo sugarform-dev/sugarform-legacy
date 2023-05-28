@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 
 interface Diff {
   head: number;
@@ -80,15 +81,22 @@ export function formatSize(byte: number): string {
 async function main(): Promise<void> {
   const args = process.argv;
   switch (args[2]) {
-  case 'inspect':
+  case 'inspect': {
+    const packageName = args[3];
+    if (packageName === undefined) {
+      console.error('Error: package name not specified.');
+      console.log('Usage: yarn bundle-size-diff inspect <package-name>');
+      process.exit(1);
+    }
     try {
-      const cjs = await readFile('./dist/cjs/index.js');
-      const esm = await readFile('./dist/esm/index.js');
-      const cjsDts = await readFile('./dist/cjs/index.d.ts');
-      const esmDts = await readFile('./dist/esm/index.d.ts');
-      const packageJson = await readFile('./package.json');
-      const license = await readFile('./LICENSE');
-      const readme = await readFile('./README.md');
+      const readPackageContent = (path: string): Promise<Buffer> => readFile(resolve('./packages', packageName, path));
+      const cjs = await readPackageContent('./dist/cjs/index.js');
+      const esm = await readPackageContent('./dist/esm/index.js');
+      const cjsDts = await readPackageContent('./dist/cjs/index.d.ts');
+      const esmDts = await readPackageContent('./dist/esm/index.d.ts');
+      const packageJson = await readPackageContent('./package.json');
+      const license = await readPackageContent('./LICENSE');
+      const readme = await readPackageContent('./README.md');
       console.log([
         cjs.byteLength,
         esm.byteLength,
@@ -101,7 +109,7 @@ async function main(): Promise<void> {
       process.exit(1);
     }
     break;
-
+  }
   case 'diff':
     exportToMarkdown(getDiff());
     break;
