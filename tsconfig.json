@@ -29,5 +29,6 @@
     "compilerOptions": {
       "module": "commonjs"
     }
-  }
+  },
+  "include": [".eslintrc.cjs"]
 }
