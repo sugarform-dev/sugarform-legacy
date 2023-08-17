@@ -86,7 +86,6 @@ export function mountSugar<T, U extends SugarObject>(
   Object.values(fields).forEach(sugar => sugar.upstream.listen('updateDirty', dirtyControl));
 
   const updateSugar = sugar as Sugar<T> & { mounted: true };
-  updateSugar.mounted = true;
   updateSugar.get = getter;
   updateSugar.set = setter;
   updateSugar.setTemplate = (template: T, mode: SetTemplateMode = 'merge'): void => {
@@ -98,7 +97,6 @@ export function mountSugar<T, U extends SugarObject>(
     set<U>(fields, newTemplate, { type: 'template', mode });
   };
   updateSugar.isDirty = false;
-  updateSugar.upstream.fire('mounted', {});
 
   return { fields };
 }
