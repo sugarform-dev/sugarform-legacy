@@ -34,6 +34,19 @@ export class SugarFormUnavailableFunctionError extends SugarFormError {
 
 }
 
+export class SugarFormAssertionError extends SugarFormError {
+  constructor(path: string, message: string) {
+    super(
+      [
+        `Assertion failed in ${path}: ${message}`,
+        'This is a bug in Sugarform. Please report it to https://github.com/sugarform-dev/sugarform/issues',
+      ].join('\n'),
+      null,
+    );
+  }
+
+}
+
 export class SugarFormUnmountedSugarError extends SugarFormError {
   constructor(path: string) {
     super(
@@ -45,3 +58,4 @@ export class SugarFormUnmountedSugarError extends SugarFormError {
     );
   }
 }
+

@@ -1,11 +1,12 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '..';
-import { SugarFormUnmountedSugarError } from '@util/error';
+import { SugarFormAssertionError, SugarFormUnmountedSugarError } from '@util/error';
 import { log } from '@util/logger';
 import type { BetterObjectConstructor, SugarObject } from '@util/object';
 import { createEmptySugar } from '@component/sugar/create';
 import { setDirty } from '@component/sugar/dirty';
+import { useMountSugarWithInit } from '@/util/mount';
 
 declare const Object: BetterObjectConstructor;
 
@@ -17,18 +18,17 @@ export function mapleSugar<T, U extends SugarObject>(
   const fieldsRef = useRef<SugarObjectNode<U>['fields']>();
   let fields = fieldsRef.current;
 
-  if (sugar.mounted && fields === undefined) {
-    log('WARN', `Sugar is already mounted, but fields are not initialized. Remounting... Path: ${sugar.path}`);
-  }
+  useMountSugarWithInit({
+    sugar,
+    initialized: fields !== undefined,
+    mountAction: () => {
+      const mounted = mountSugar(sugar, options, fieldsRef);
+      fields = mounted.fields;
+      fieldsRef.current = fields;
+    },
+  });
 
-  if (sugar.mounted && fields !== undefined) {
-    log('WARN', `Sugar is already mounted. Path: ${sugar.path}`);
-  } else {
-    log('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
-    const mounted = mountSugar(sugar, options, fieldsRef);
-    fields = mounted.fields;
-    fieldsRef.current = fields;
-  }
+  if (fields === undefined) throw new SugarFormAssertionError(sugar.path, 'imperfect initialization of fields in mapleSugar.');
 
   return {
     fields,

@@ -50,6 +50,8 @@ export const useMountSugarWithInit = <T>(
     } else {
       warn('Sugar is already attached to another component! Sugar may be mounted in multiple component.');
     }
+  } else {
+    debug('Mounting sugar.');
   }
 
   sugar.mounted = true;
