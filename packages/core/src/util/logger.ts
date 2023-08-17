@@ -23,3 +23,7 @@ export function log(level: LogLevel, message: string): void {
   }
 }
 
+
+export function logInSugar(level: LogLevel, message: string, sugar: { path: string }): void {
+  log(level, `<${sugar.path}> ${message}`);
+}
