@@ -1,4 +1,4 @@
-import { debug } from '@/util/logger';
+import { log } from '@/util/logger';
 import type { Sugar, SugarValue } from '.';
 import { setDirty } from './dirty';
 import { useRef } from 'react';
@@ -13,14 +13,14 @@ export function constant<T>(
 
   setDirty(sugar, sugar.template !== value);
   mountedSugar.get = (): SugarValue<T> => ({ success: true, value });
-  mountedSugar.set = (): void => { debug('WARN', 'Value of constant sugar conflicted by set method. Path: ${Sugar.path}'); };
+  mountedSugar.set = (): void => { log('WARN', 'Value of constant sugar conflicted by set method. Path: ${Sugar.path}'); };
   mountedSugar.setTemplate = (): void => {
     sugar.template = value;
     setDirty(sugar, sugar.template !== value);
   };
 
   if (!mountedRef.current && sugar.mounted) {
-    debug('WARN', `Sugar is already mounted, but refs are not initialized. Remounting... Path: ${sugar.path}`);
+    log('WARN', `Sugar is already mounted, but refs are not initialized. Remounting... Path: ${sugar.path}`);
     mountedRef.current = false;
   }
   if (!mountedRef.current) {

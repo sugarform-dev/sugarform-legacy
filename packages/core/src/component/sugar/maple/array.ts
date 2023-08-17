@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '@component/sugar';
-import { debug } from '@util/logger';
+import { log } from '@util/logger';
 import { createEmptySugar } from '@component/sugar/create';
 import { setDirty } from '@component/sugar/dirty';
 
@@ -46,12 +46,12 @@ export function mapleArray<T>(
   };
 
   if (!mountedRef.current && sugar.mounted) {
-    debug('WARN', `Sugar is already mounted, but items are not initialized. Remounting... Path: ${sugar.path}`);
+    log('WARN', `Sugar is already mounted, but items are not initialized. Remounting... Path: ${sugar.path}`);
     mountedRef.current = false;
   }
 
   if (!mountedRef.current) {
-    debug('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
+    log('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
     const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
     mountedSugar.mounted = true;
 
@@ -74,7 +74,7 @@ export function mapleArray<T>(
     const values = keys.map(id => {
       const managed = getManagedSugar(id);
       if (!managed.mounted) {
-        debug('WARN', `Sugar is not mounted when tried to get. Path: ${managed.path}`);
+        log('WARN', `Sugar is not mounted when tried to get. Path: ${managed.path}`);
         return { success: false, value: null };
       }
       return managed.get();

@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useRef } from 'react';
 import type { SugarValue , Sugar } from '@component/sugar';
-import { debug } from '@util/logger';
+import { log } from '@util/logger';
 import { isSugarObject } from '@util/object';
 import { setDirty } from '@component/sugar/dirty';
 
@@ -28,7 +28,7 @@ export function syncState<T>(
   };
 
   if (!mountedRef.current && sugar.mounted) {
-    debug('WARN', `Sugar is already mounted, but refs are not initialized. Remounting... Path: ${sugar.path}`);
+    log('WARN', `Sugar is already mounted, but refs are not initialized. Remounting... Path: ${sugar.path}`);
     mountedRef.current = false;
   }
   if (!mountedRef.current) {

@@ -2,7 +2,7 @@ import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '..';
 import { SugarFormUnmountedSugarError } from '@util/error';
-import { debug } from '@util/logger';
+import { log } from '@util/logger';
 import type { BetterObjectConstructor, SugarObject } from '@util/object';
 import { createEmptySugar } from '@component/sugar/create';
 import { setDirty } from '@component/sugar/dirty';
@@ -18,13 +18,13 @@ export function mapleSugar<T, U extends SugarObject>(
   let fields = fieldsRef.current;
 
   if (sugar.mounted && fields === undefined) {
-    debug('WARN', `Sugar is already mounted, but fields are not initialized. Remounting... Path: ${sugar.path}`);
+    log('WARN', `Sugar is already mounted, but fields are not initialized. Remounting... Path: ${sugar.path}`);
   }
 
   if (sugar.mounted && fields !== undefined) {
-    debug('WARN', `Sugar is already mounted. Path: ${sugar.path}`);
+    log('WARN', `Sugar is already mounted. Path: ${sugar.path}`);
   } else {
-    debug('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
+    log('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
     const mounted = mountSugar(sugar, options, fieldsRef);
     fields = mounted.fields;
     fieldsRef.current = fields;
@@ -42,7 +42,7 @@ export function mountSugar<T, U extends SugarObject>(
   fieldsRef: MutableRefObject<SugarObjectNode<U>['fields'] | undefined>,
 ): SugarObjectNode<U> {
   const template = options.reshape.deform(sugar.template);
-  debug('DEBUG', `Template: ${JSON.stringify(template)}`);
+  log('DEBUG', `Template: ${JSON.stringify(template)}`);
 
   const fields = wrapSugar(sugar.path, template);
 
@@ -50,7 +50,7 @@ export function mountSugar<T, U extends SugarObject>(
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     const value = get<U>(fields);
-    debug('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}, Path: ${sugar.path}`);
+    log('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}, Path: ${sugar.path}`);
     if (!value.success) return value;
     const u: U = value.value;
     const validators: Array<{ condition: (value: U) => boolean }> =
@@ -70,7 +70,7 @@ export function mountSugar<T, U extends SugarObject>(
   };
 
   const setter = (value: T): void => {
-    debug('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
+    log('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     set<U>(fields, options.reshape.deform(value), { type: 'value' });
@@ -121,7 +121,7 @@ function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields']): Sugar
   for (const key in fields) {
     const sugar = fields[key];
     if (!sugar.mounted) {
-      debug('WARN', `Sugar is not mounted when tried to get. Path: ${sugar.path}`);
+      log('WARN', `Sugar is not mounted when tried to get. Path: ${sugar.path}`);
       result[key] = null;
       success = false;
     } else {
@@ -153,7 +153,7 @@ function set<T extends SugarObject>(
   for (const key in fields) {
     const sugar = fields[key];
     if (!sugar.mounted) {
-      debug('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
+      log('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
       continue;
     }
     if (type.type === 'value') {

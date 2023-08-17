@@ -5,7 +5,7 @@ export function setSugarFormLogLevel(level: LogLevel): void {
   SugarFormLogLevel = level;
 }
 
-export function debug(level: LogLevel, message: string): void {
+export function log(level: LogLevel, message: string): void {
   if (SugarFormLogLevel === 'SILENT') return;
   if (level === 'WARN') {
     console.warn(message);
@@ -22,3 +22,4 @@ export function debug(level: LogLevel, message: string): void {
     return;
   }
 }
+

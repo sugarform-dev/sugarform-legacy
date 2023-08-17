@@ -1,4 +1,4 @@
-import { debug, setSugarFormLogLevel } from '@util/logger';
+import { log, setSugarFormLogLevel } from '@util/logger';
 import { describe, it } from '@jest/globals';
 
 describe('logger', () => {
@@ -10,26 +10,26 @@ describe('logger', () => {
     global.console.debug = debugMock;
 
     setSugarFormLogLevel('SILENT');
-    debug('DEBUG', 'debug');
-    debug('INFO', 'info');
-    debug('WARN', 'warn');
+    log('DEBUG', 'debug');
+    log('INFO', 'info');
+    log('WARN', 'warn');
     expect(debugMock).toHaveBeenCalledTimes(0);
     expect(infoMock).toHaveBeenCalledTimes(0);
     expect(warnMock).toHaveBeenCalledTimes(0);
 
     setSugarFormLogLevel('WARN');
-    debug('DEBUG', 'debug');
-    debug('INFO', 'info');
-    debug('WARN', 'warn');
+    log('DEBUG', 'debug');
+    log('INFO', 'info');
+    log('WARN', 'warn');
     expect(debugMock).toHaveBeenCalledTimes(0);
     expect(infoMock).toHaveBeenCalledTimes(0);
     expect(warnMock).toHaveBeenCalledTimes(1);
     expect(warnMock).toHaveBeenCalledWith('warn');
 
     setSugarFormLogLevel('INFO');
-    debug('DEBUG', 'debug');
-    debug('INFO', 'info');
-    debug('WARN', 'warn');
+    log('DEBUG', 'debug');
+    log('INFO', 'info');
+    log('WARN', 'warn');
     expect(debugMock).toHaveBeenCalledTimes(0);
     expect(infoMock).toHaveBeenCalledTimes(1);
     expect(infoMock).toHaveBeenCalledWith('info');
@@ -37,9 +37,9 @@ describe('logger', () => {
     expect(warnMock).toHaveBeenLastCalledWith('warn');
 
     setSugarFormLogLevel('DEBUG');
-    debug('DEBUG', 'debug');
-    debug('INFO', 'info');
-    debug('WARN', 'warn');
+    log('DEBUG', 'debug');
+    log('INFO', 'info');
+    log('WARN', 'warn');
     expect(debugMock).toHaveBeenCalledTimes(1);
     expect(debugMock).toHaveBeenCalledWith('debug');
     expect(infoMock).toHaveBeenCalledTimes(2);
