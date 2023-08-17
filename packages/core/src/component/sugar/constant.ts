@@ -1,4 +1,4 @@
-import { log } from '@/util/logger';
+import { logInSugar } from '@/util/logger';
 import type { Sugar, SugarValue } from '.';
 import { setDirty } from './dirty';
 import { useMountSugar } from '@/util/mount';
@@ -14,7 +14,7 @@ export function constant<T>(
     mountAction: () => {
       mountedSugar.isDirty = false;
       mountedSugar.get = (): SugarValue<T> => ({ success: true, value });
-      mountedSugar.set = (): void => { log('WARN', `Value of constant sugar conflicted by set method. Path: ${sugar.path}`); };
+      mountedSugar.set = (): void => { logInSugar('WARN', 'Value of constant sugar conflicted by set method.', sugar); };
       mountedSugar.setTemplate = (): void => {
         sugar.template = value;
         setDirty(sugar, sugar.template !== value);

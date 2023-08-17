@@ -2,7 +2,7 @@ import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplateMode } from '..';
 import { SugarFormAssertionError, SugarFormUnmountedSugarError } from '@util/error';
-import { log } from '@util/logger';
+import { log, logInSugar } from '@util/logger';
 import type { BetterObjectConstructor, SugarObject } from '@util/object';
 import { createEmptySugar } from '@component/sugar/create';
 import { setDirty } from '@component/sugar/dirty';
@@ -50,7 +50,7 @@ export function mountSugar<T, U extends SugarObject>(
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     const value = get<U>(fields);
-    log('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}, Path: ${sugar.path}`);
+    logInSugar('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}`, sugar);
     if (!value.success) return value;
     const u: U = value.value;
     const validators: Array<{ condition: (value: U) => boolean }> =
@@ -70,7 +70,7 @@ export function mountSugar<T, U extends SugarObject>(
   };
 
   const setter = (value: T): void => {
-    log('DEBUG', `Setting value of sugar. Path: ${sugar.path}`);
+    logInSugar('DEBUG', 'Setting value of sugar.', sugar);
     const fields = fieldsRef.current;
     if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     set<U>(fields, options.reshape.deform(value), { type: 'value' });
@@ -119,7 +119,7 @@ function get<T extends SugarObject>(fields: SugarObjectNode<T>['fields']): Sugar
   for (const key in fields) {
     const sugar = fields[key];
     if (!sugar.mounted) {
-      log('WARN', `Sugar is not mounted when tried to get. Path: ${sugar.path}`);
+      logInSugar('WARN', 'Sugar is not mounted when tried to get.', sugar);
       result[key] = null;
       success = false;
     } else {
@@ -151,7 +151,7 @@ function set<T extends SugarObject>(
   for (const key in fields) {
     const sugar = fields[key];
     if (!sugar.mounted) {
-      log('WARN', `Sugar is not mounted when tried to set. Path: ${sugar.path}`);
+      logInSugar('WARN', 'Sugar is not mounted when tried to set.', sugar);
       continue;
     }
     if (type.type === 'value') {

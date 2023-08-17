@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '@component/sugar';
-import { log } from '@util/logger';
+import { logInSugar } from '@util/logger';
 import { createEmptySugar } from '@component/sugar/create';
 import { setDirty } from '@component/sugar/dirty';
 import { useMountSugar } from '@/util/mount';
@@ -67,7 +67,7 @@ export function mapleArray<T>(
     const values = keys.map(id => {
       const managed = getManagedSugar(id);
       if (!managed.mounted) {
-        log('WARN', `Sugar is not mounted when tried to get. Path: ${managed.path}`);
+        logInSugar('WARN', 'Sugar is not mounted when tried to get.', managed);
         return { success: false, value: null };
       }
       return managed.get();
