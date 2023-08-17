@@ -1,8 +1,9 @@
 import { useId, useRef, useState } from 'react';
 import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '@component/sugar';
-import { debug } from '@util/logger';
+import { logInSugar } from '@util/logger';
 import { createEmptySugar } from '@component/sugar/create';
 import { setDirty } from '@component/sugar/dirty';
+import { useMountSugar } from '@/util/mount';
 
 // eslint-disable-next-line max-lines-per-function
 export function mapleArray<T>(
@@ -10,7 +11,6 @@ export function mapleArray<T>(
   options: SugarArrayUser<T>,
 ): SugarArrayNode<T> {
   const newId = useCountingId();
-  const mountedRef = useRef(false);
   const keysRef = useRef<string[]>([]);
 
   const managedSugars = useRef<Array<{ id: string, sugar: Sugar<T> }>>([]);
@@ -45,26 +45,19 @@ export function mapleArray<T>(
     });
   };
 
-  if (!mountedRef.current && sugar.mounted) {
-    debug('WARN', `Sugar is already mounted, but items are not initialized. Remounting... Path: ${sugar.path}`);
-    mountedRef.current = false;
-  }
+  useMountSugar({
+    sugar,
+    mountAction: () => {
+      const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
+      mountedSugar.isDirty = false;
+      defaultKeys = sugar.template.map(v => {
+        const id = newId();
+        getManagedSugar(id, v);
+        return id;
+      });
+    },
+  });
 
-  if (!mountedRef.current) {
-    debug('DEBUG', `Mounting sugar. Path: ${sugar.path}`);
-    const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
-    mountedSugar.mounted = true;
-
-    mountedSugar.isDirty = false;
-    mountedSugar.upstream.fire('mounted', {});
-
-    defaultKeys = sugar.template.map(v => {
-      const id = newId();
-      getManagedSugar(id, v);
-      return id;
-    });
-    mountedRef.current = true;
-  }
 
   const [ keys, setKeys ] = useState<string[]>(defaultKeys);
   keysRef.current = keys;
@@ -74,7 +67,7 @@ export function mapleArray<T>(
     const values = keys.map(id => {
       const managed = getManagedSugar(id);
       if (!managed.mounted) {
-        debug('WARN', `Sugar is not mounted when tried to get. Path: ${managed.path}`);
+        logInSugar('WARN', 'Sugar is not mounted when tried to get.', managed);
         return { success: false, value: null };
       }
       return managed.get();
