@@ -9,6 +9,7 @@ export type Sugar<T> = SugarData<T> & ({
   mounted: false,
 } | {
   mounted: true,
+  dist: string,
   get: () => SugarValue<T>,
   set: (value: T) => void,
   setTemplate: (template: T, mode?: SetTemplateMode) => void,
