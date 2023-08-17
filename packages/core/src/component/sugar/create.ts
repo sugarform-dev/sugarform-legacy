@@ -9,6 +9,7 @@ import { syncState } from './sync/state';
 import { syncRef } from './sync/ref';
 import { mapleSugar } from './maple';
 import { SugarFormUnavailableFunctionError } from '@util/error';
+import { constant } from './constant';
 
 export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
   const sugar: Sugar<T> = {
@@ -26,6 +27,7 @@ export function createEmptySugar<T>(path: string, template: T): Sugar<T> {
         });
       }
     },
+    constant: (value: T) => constant(sugar, value),
     syncState:
       (
         state: T,
