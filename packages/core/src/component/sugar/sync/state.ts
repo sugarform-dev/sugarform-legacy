@@ -4,6 +4,7 @@ import type { SugarValue , Sugar } from '@component/sugar';
 import { isSugarObject } from '@util/object';
 import { setDirty } from '@component/sugar/dirty';
 import { useMountSugar } from '@/util/mount';
+import { logInSugar } from '@/util/logger';
 
 export function syncState<T>(
   sugar: Sugar<T>,
@@ -34,5 +35,9 @@ export function syncState<T>(
     });
   }, [ fixedState ]);
 
-  setDirty(sugar, !comparator(sugar.template, fixedState));
+  const isDirty = !comparator(sugar.template, fixedState);
+  useEffect(() => {
+    logInSugar('DEBUG', JSON.stringify({ isDirty }), sugar);
+    setDirty(sugar, isDirty);
+  }, [ isDirty ]);
 }
