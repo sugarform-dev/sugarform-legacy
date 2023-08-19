@@ -1,5 +1,5 @@
 import type { Sugar } from '@/component/sugar';
-import { useId, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { logInSugar } from './logger';
 
 interface MountConfig<T> {
@@ -11,6 +11,7 @@ interface MountConfig<T> {
    * Remember that updating `mounted`, `dist` and firing `mounted` event is done by implicit.
    */
   mountAction: () => void,
+
 }
 
 interface MountConfigWithInit<T> extends MountConfig<T> {
@@ -25,40 +26,43 @@ interface MountConfigWithInit<T> extends MountConfig<T> {
  */
 export const useMountSugarWithInit = <T>(
   { sugar, initialized, mountAction }: MountConfigWithInit<T>,
-): boolean => {
+): void => {
 
   const id = useId();
   const debug = (message: string): void => logInSugar('DEBUG', message, sugar);
   const warn = (message: string): void => logInSugar('WARN', message, sugar);
 
+  useEffect(() => {
   // When the component is already mounted and re-render occured.
-  if (sugar.mounted && initialized) {
-    if (sugar.dist === id) {
-      debug('Mounting skipped because this is after the second time render and it is already mounted.');
-      return false;
-    } else {
-      warn('Sugar is already attached to another component! Sugar may be mounted in multiple component.');
-    }
+    if (sugar.mounted && initialized) {
+      if (sugar.dist === id) {
+        debug('Mounting skipped because this is after the second time render and it is already mounted.');
+        return;
+      } else {
+        warn('Sugar is already attached to another component! Sugar may be mounted in multiple component.');
+        return;
+      }
 
-  // When the Sugar is mounted, but component does not know it.
-  } else if (sugar.mounted && !initialized) {
-    if (sugar.dist === id) {
+      // When the Sugar is mounted, but component does not know it.
+    } else if (sugar.mounted && !initialized) {
+      if (sugar.dist === id) {
       // This should not happen in normal case, but it can happen under strict mode.
       // In strict mode, React may call render twice to detect side effects.
       // It resets the state of the component, but not the state of the Sugar.
       // So, we need to re-mount the Sugar and we should not display warning.
+      } else {
+        warn('Sugar is already attached to another component! Sugar may be mounted in multiple component.');
+      }
     } else {
-      warn('Sugar is already attached to another component! Sugar may be mounted in multiple component.');
+      debug('Mounting sugar.');
     }
-  } else {
-    debug('Mounting sugar.');
-  }
 
-  sugar.mounted = true;
-  (sugar as Sugar<T> & { mounted: true }).dist = id;
-  sugar.upstream.fire('mounted', {});
-  mountAction();
-  return true;
+    sugar.mounted = true;
+    (sugar as Sugar<T> & { mounted: true }).dist = id;
+    sugar.upstream.fire('mounted', {});
+    mountAction();
+    return;
+  }, []);
 };
 
 
@@ -69,9 +73,9 @@ export const useMountSugarWithInit = <T>(
  */
 export const useMountSugar = <T>(
   { sugar, mountAction }: MountConfig<T>,
-): boolean => {
+): void => {
   const mountedRef = useRef<boolean>(false);
-  return useMountSugarWithInit({
+  useMountSugarWithInit({
     sugar,
     initialized: mountedRef.current,
     mountAction: (): void => {

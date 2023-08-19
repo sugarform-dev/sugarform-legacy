@@ -15,39 +15,43 @@ export function mapleSugar<T, U extends SugarObject>(
   options: SugarUserReshaper<T, U>,
 ): SugarObjectNode<U> {
 
-  const fieldsRef = useRef<SugarObjectNode<U>['fields']>();
-  let fields = fieldsRef.current;
+  const madeSugarRef = useRef<MadeSugar<U>>();
 
   useMountSugarWithInit({
     sugar,
-    initialized: fields !== undefined,
+    initialized: madeSugarRef.current !== undefined,
     mountAction: () => {
-      const mounted = mountSugar(sugar, options, fieldsRef);
-      fields = mounted.fields;
-      fieldsRef.current = fields;
+      if (madeSugarRef.current === undefined) throw new SugarFormAssertionError(sugar.path, 'imperfect initialization of fields in mapleSugar.');
+      madeSugarRef.current.mountAction();
     },
   });
 
-  if (fields === undefined) throw new SugarFormAssertionError(sugar.path, 'imperfect initialization of fields in mapleSugar.');
+
+  madeSugarRef.current ??= madeSugar(sugar, options, madeSugarRef);
 
   return {
-    fields,
+    fields: madeSugarRef.current.fields,
   };
 }
 
+interface MadeSugar<U extends SugarObject> {
+  fields: SugarObjectNode<U>['fields'],
+  mountAction: () => void,
+}
+
 // eslint-disable-next-line max-lines-per-function
-export function mountSugar<T, U extends SugarObject>(
+export function madeSugar<T, U extends SugarObject>(
   sugar: Sugar<T>,
   options: SugarUserReshaper<T, U>,
-  fieldsRef: MutableRefObject<SugarObjectNode<U>['fields'] | undefined>,
-): SugarObjectNode<U> {
+  ref: MutableRefObject<MadeSugar<U> | undefined>,
+): MadeSugar<U>  {
   const template = options.reshape.deform(sugar.template);
   log('DEBUG', `Template: ${JSON.stringify(template)}`);
 
   const fields = wrapSugar(sugar.path, template);
 
   const getter = (): SugarValue<T> => {
-    const fields = fieldsRef.current;
+    const fields = ref.current?.fields;
     if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     const value = get<U>(fields);
     logInSugar('DEBUG', `Getting Value of Sugar: ${JSON.stringify(value)}`, sugar);
@@ -71,34 +75,37 @@ export function mountSugar<T, U extends SugarObject>(
 
   const setter = (value: T): void => {
     logInSugar('DEBUG', 'Setting value of sugar.', sugar);
-    const fields = fieldsRef.current;
+    const fields = ref.current?.fields;
     if (fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     set<U>(fields, options.reshape.deform(value), { type: 'value' });
   };
 
   const dirtyControl = ({ isDirty }: { isDirty: boolean }) : void => {
-    const fields = fieldsRef.current;
+    const fields = ref.current?.fields;
     if (!sugar.mounted || fields === undefined) throw new SugarFormUnmountedSugarError(sugar.path);
     if (!isDirty && Object.values(fields).some(s => s.mounted && s.isDirty)) return;
     setDirty(sugar, isDirty);
   };
 
-  Object.values(fields).forEach(sugar => sugar.upstream.listen('updateDirty', dirtyControl));
+  return {
+    fields,
+    mountAction: (): void => {
+      Object.values(fields).forEach(sugar => sugar.upstream.listen('updateDirty', dirtyControl));
 
-  const updateSugar = sugar as Sugar<T> & { mounted: true };
-  updateSugar.get = getter;
-  updateSugar.set = setter;
-  updateSugar.setTemplate = (template: T, mode: SetTemplateMode = 'merge'): void => {
-    const newTemplate = mode === 'replace' ? options.reshape.deform(template) : {
-      ...options.reshape.deform(sugar.template),
-      ...options.reshape.deform(template),
-    };
-    sugar.template = mode === 'replace' ? template : options.reshape.transform(newTemplate);
-    set<U>(fields, newTemplate, { type: 'template', mode });
+      const updateSugar = sugar as Sugar<T> & { mounted: true };
+      updateSugar.get = getter;
+      updateSugar.set = setter;
+      updateSugar.setTemplate = (template: T, mode: SetTemplateMode = 'merge'): void => {
+        const newTemplate = mode === 'replace' ? options.reshape.deform(template) : {
+          ...options.reshape.deform(sugar.template),
+          ...options.reshape.deform(template),
+        };
+        sugar.template = mode === 'replace' ? template : options.reshape.transform(newTemplate);
+        set<U>(fields, newTemplate, { type: 'template', mode });
+      };
+      updateSugar.isDirty = false;
+    },
   };
-  updateSugar.isDirty = false;
-
-  return { fields };
 }
 
 
