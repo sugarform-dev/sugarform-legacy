@@ -59,8 +59,8 @@ export const useMountSugarWithInit = <T>(
 
     sugar.mounted = true;
     (sugar as Sugar<T> & { mounted: true }).dist = id;
-    sugar.upstream.fire('mounted', {});
     mountAction();
+    sugar.upstream.fire('mounted', {});
     return;
   }, []);
 };
