@@ -50,6 +50,41 @@ export function mapleArray<T>(
     mountAction: () => {
       const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
       mountedSugar.isDirty = false;
+      mountedSugar.get = (): SugarValue<T[]> => {
+        const values = keys.map(id => {
+          const managed = getManagedSugar(id);
+          if (!managed.mounted) {
+            logInSugar('WARN', 'Sugar is not mounted when tried to get.', managed);
+            return { success: false, value: null };
+          }
+          return managed.get();
+        });
+
+        return {
+          success: values.every(v => v.success),
+          value: values.map(v => v.value) as T[],
+        };
+      };
+      mountedSugar.set = (value: T[]): void => {
+        const keys = value.map((v, i) => {
+          const id = newId();
+          const managed = getManagedSugar(id, sugar.template[i] ?? options.template);
+          managed.asMounted(s => {
+            setTimeout(() => s.set(v));
+          });
+          return id;
+        });
+        setKeys(keys);
+      };
+      mountedSugar.setTemplate = (template: T[], mode: SetTemplateMode = 'merge'): void => {
+        sugar.template = template;
+        const keys = template.map(v => {
+          const id = newId();
+          getManagedSugar(id, mode === 'merge' ? { ...options.template, ...v } : v);
+          return id;
+        });
+        setKeys(keys);
+      };
       defaultKeys = sugar.template.map(v => {
         const id = newId();
         getManagedSugar(id, v);
@@ -62,42 +97,6 @@ export function mapleArray<T>(
   const [ keys, setKeys ] = useState<string[]>(defaultKeys);
   keysRef.current = keys;
 
-  const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
-  mountedSugar.get = (): SugarValue<T[]> => {
-    const values = keys.map(id => {
-      const managed = getManagedSugar(id);
-      if (!managed.mounted) {
-        logInSugar('WARN', 'Sugar is not mounted when tried to get.', managed);
-        return { success: false, value: null };
-      }
-      return managed.get();
-    });
-
-    return {
-      success: values.every(v => v.success),
-      value: values.map(v => v.value) as T[],
-    };
-  };
-  mountedSugar.set = (value: T[]): void => {
-    const keys = value.map((v, i) => {
-      const id = newId();
-      const managed = getManagedSugar(id, sugar.template[i] ?? options.template);
-      managed.asMounted(s => {
-        setTimeout(() => s.set(v));
-      });
-      return id;
-    });
-    setKeys(keys);
-  };
-  mountedSugar.setTemplate = (template: T[], mode: SetTemplateMode = 'merge'): void => {
-    sugar.template = template;
-    const keys = template.map(v => {
-      const id = newId();
-      getManagedSugar(id, mode === 'merge' ? { ...options.template, ...v } : v);
-      return id;
-    });
-    setKeys(keys);
-  };
 
   // refresh dirty for new items or removed items
   setDirty(

@@ -12,20 +12,19 @@ export function syncState<T>(
 ): void {
 
   const fixedState = isSugarObject(state) ? { ...state } : state;
-  const mountedSugar = sugar as Sugar<T> & { mounted: true };
-
-  mountedSugar.get = (): SugarValue<T> => ({ success: true, value: fixedState });
-  mountedSugar.set = (value: T): void => setState(value);
-  mountedSugar.setTemplate = (template: T): void => {
-    sugar.template = template;
-    setState(template);
-  };
 
   useMountSugar({
     sugar,
     mountAction: () => {
+      const mountedSugar = sugar as Sugar<T> & { mounted: true };
       mountedSugar.isDirty = false;
       mountedSugar.setTemplate(sugar.template);
+      mountedSugar.get = (): SugarValue<T> => ({ success: true, value: fixedState });
+      mountedSugar.set = (value: T): void => setState(value);
+      mountedSugar.setTemplate = (template: T): void => {
+        sugar.template = template;
+        setState(template);
+      };
     },
   });
 
