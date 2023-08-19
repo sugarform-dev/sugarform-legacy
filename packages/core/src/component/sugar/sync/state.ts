@@ -1,4 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
+import { useEffect } from 'react';
 import type { SugarValue , Sugar } from '@component/sugar';
 import { isSugarObject } from '@util/object';
 import { setDirty } from '@component/sugar/dirty';
@@ -18,15 +19,20 @@ export function syncState<T>(
     mountAction: () => {
       const mountedSugar = sugar as Sugar<T> & { mounted: true };
       mountedSugar.isDirty = false;
-      mountedSugar.setTemplate(sugar.template);
-      mountedSugar.get = (): SugarValue<T> => ({ success: true, value: fixedState });
       mountedSugar.set = (value: T): void => setState(value);
       mountedSugar.setTemplate = (template: T): void => {
         sugar.template = template;
         setState(template);
       };
+      mountedSugar.setTemplate(sugar.template);
     },
   });
+
+  useEffect(() => {
+    sugar.asMounted(mountedSugar => {
+      mountedSugar.get = (): SugarValue<T> => ({ success: true, value: fixedState });
+    });
+  }, [ fixedState ]);
 
   setDirty(sugar, !comparator(sugar.template, fixedState));
 }
