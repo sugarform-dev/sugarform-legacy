@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { useEffect } from 'react';
 import type { SugarValue , Sugar } from '@component/sugar';
 import { isSugarObject } from '@util/object';
-import { setDirty } from '@component/sugar/dirty';
+import { resetDirty, setDirty } from '@component/sugar/dirty';
 import { useMountSugar } from '@/util/mount';
 import { logInSugar } from '@/util/logger';
 
@@ -19,7 +19,7 @@ export function syncState<T>(
     sugar,
     mountAction: () => {
       const mountedSugar = sugar as Sugar<T> & { mounted: true };
-      mountedSugar.isDirty = false;
+      resetDirty(mountedSugar);
       mountedSugar.set = (value: T): void => setState(value);
       mountedSugar.setTemplate = (template: T): void => {
         sugar.template = template;

@@ -5,7 +5,7 @@ import { SugarFormAssertionError, SugarFormUnmountedSugarError } from '@util/err
 import { log, logInSugar } from '@util/logger';
 import type { BetterObjectConstructor, SugarObject } from '@util/object';
 import { createEmptySugar } from '@component/sugar/create';
-import { setDirty } from '@component/sugar/dirty';
+import { resetDirty, setDirty } from '@component/sugar/dirty';
 import { useMountSugarWithInit } from '@/util/mount';
 
 declare const Object: BetterObjectConstructor;
@@ -103,7 +103,7 @@ export function madeSugar<T, U extends SugarObject>(
         sugar.template = mode === 'replace' ? template : options.reshape.transform(newTemplate);
         set<U>(fields, newTemplate, { type: 'template', mode });
       };
-      updateSugar.isDirty = false;
+      resetDirty(updateSugar);
     },
   };
 }
