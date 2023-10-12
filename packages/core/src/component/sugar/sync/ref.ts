@@ -1,7 +1,7 @@
 import type { MutableRefObject } from 'react';
 import { useRef } from 'react';
 import type { Sugar, SugarValue } from '..';
-import { setDirty } from '@component/sugar/dirty';
+import { resetDirty, setDirty } from '@component/sugar/dirty';
 import { useMountSugar } from '@/util/mount';
 
 export function syncRef<T>(
@@ -40,7 +40,7 @@ export function syncRef<T>(
         setterWithDefault(v);
         setTimeout(refreshDirty, 0);
       };
-      updateSugar.isDirty = false;
+      resetDirty(updateSugar);
       updateSugar.setTemplate(sugar.template);
     },
   });

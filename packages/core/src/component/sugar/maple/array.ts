@@ -3,7 +3,7 @@ import { useEffect , useId, useRef, useState } from 'react';
 import type { SetTemplateMode, Sugar, SugarArrayNode, SugarArrayUser, SugarValue } from '@component/sugar';
 import { logInSugar } from '@util/logger';
 import { createEmptySugar } from '@component/sugar/create';
-import { setDirty } from '@component/sugar/dirty';
+import { resetDirty, setDirty } from '@component/sugar/dirty';
 import { useMountSugar } from '@/util/mount';
 
 // eslint-disable-next-line max-lines-per-function
@@ -50,7 +50,7 @@ export function mapleArray<T>(
     sugar,
     mountAction: () => {
       const mountedSugar = sugar as Sugar<T[]> & { mounted: true };
-      mountedSugar.isDirty = false;
+      resetDirty(mountedSugar);
       mountedSugar.get = (): SugarValue<T[]> => {
         const values = keysRef.current.map(id => {
           const managed = getManagedSugar(id);
