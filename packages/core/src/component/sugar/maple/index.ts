@@ -4,6 +4,7 @@ import type { Sugar, SugarUserReshaper, SugarObjectNode, SugarValue, SetTemplate
 import { SugarFormAssertionError, SugarFormUnmountedSugarError } from '@util/error';
 import { log, logInSugar } from '@util/logger';
 import type { BetterObjectConstructor, SugarObject } from '@util/object';
+import { merge } from '@util/object';
 import { createEmptySugar } from '@component/sugar/create';
 import { resetDirty, setDirty } from '@component/sugar/dirty';
 import { useMountSugarWithInit } from '@/util/mount';
@@ -96,10 +97,11 @@ export function madeSugar<T, U extends SugarObject>(
       updateSugar.get = getter;
       updateSugar.set = setter;
       updateSugar.setTemplate = (template: T, mode: SetTemplateMode = 'merge'): void => {
-        const newTemplate = mode === 'replace' ? options.reshape.deform(template) : {
-          ...options.reshape.deform(sugar.template),
-          ...options.reshape.deform(template),
-        };
+        const newTemplate = merge(
+          options.reshape.deform(template),
+          options.reshape.deform(sugar.template),
+          mode,
+        );
         sugar.template = mode === 'replace' ? template : options.reshape.transform(newTemplate);
         set<U>(fields, newTemplate, { type: 'template', mode });
       };
