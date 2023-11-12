@@ -5,6 +5,7 @@ import { logInSugar } from '@util/logger';
 import { createEmptySugar } from '@component/sugar/create';
 import { resetDirty, setDirty } from '@component/sugar/dirty';
 import { useMountSugar } from '@/util/mount';
+import { merge } from '@/util/object';
 
 // eslint-disable-next-line max-lines-per-function
 export function mapleArray<T>(
@@ -81,7 +82,7 @@ export function mapleArray<T>(
         sugar.template = template;
         const keys = template.map(v => {
           const id = newId();
-          getManagedSugar(id, mode === 'merge' ? { ...options.template, ...v } : v);
+          getManagedSugar(id, merge(v, options.template, mode));
           return id;
         });
         setKeysRef.current?.(keys);
